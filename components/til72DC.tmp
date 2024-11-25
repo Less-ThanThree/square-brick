@@ -57,65 +57,37 @@ mouse_filter = 2
 columns = 3
 
 [node name="Panel" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel2" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel3" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel4" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel5" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel6" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel7" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel8" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 
 [node name="Panel9" type="Panel" parent="MeepleGrid"]
-modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
-
-[connection signal="mouse_entered" from="MeepleGrid/Panel" to="." method="_on_panel_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel" to="." method="_on_panel_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel2" to="." method="_on_panel_2_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel2" to="." method="_on_panel_2_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel3" to="." method="_on_panel_3_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel3" to="." method="_on_panel_3_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel4" to="." method="_on_panel_4_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel4" to="." method="_on_panel_4_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel5" to="." method="_on_panel_5_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel5" to="." method="_on_panel_5_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel6" to="." method="_on_panel_6_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel6" to="." method="_on_panel_6_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel7" to="." method="_on_panel_7_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel7" to="." method="_on_panel_7_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel8" to="." method="_on_panel_8_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel8" to="." method="_on_panel_8_mouse_exited"]
-[connection signal="mouse_entered" from="MeepleGrid/Panel9" to="." method="_on_panel_9_mouse_entered"]
-[connection signal="mouse_exited" from="MeepleGrid/Panel9" to="." method="_on_panel_9_mouse_exited"]
