@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdylrq1ctw8fw"]
+
+[ext_resource type="Script" path="res://scripts/all_tiles_test.gd" id="1_lh2av"]
+[ext_resource type="PackedScene" uid="uid://dnf78x1w5i04b" path="res://components/tile.tscn" id="2_y1gkt"]
+
+[node name="AllTilesTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lh2av")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 7
+
+[node name="Tile7" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile2" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile3" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile4" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile5" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile6" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile8" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile9" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile10" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile11" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile12" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile13" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile14" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile15" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile16" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile17" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile18" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
+
+[node name="Tile19" parent="GridContainer" instance=ExtResource("2_y1gkt")]
+layout_mode = 2
