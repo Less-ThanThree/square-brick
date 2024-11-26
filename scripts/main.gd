@@ -8,9 +8,9 @@ func _ready() -> void:
 	var tile_block_scene = tile_block.instantiate()
 	tile_block_scene.tile_info = resource_tiles.tile_info.brick_1
 	add_child(tile_block_scene)
-	tile_block_scene = tile_block.instantiate()
-	tile_block_scene.tile_info = resource_tiles.tile_info.brick_1
-	add_child(tile_block_scene)
+	#tile_block_scene = tile_block.instantiate()
+	#tile_block_scene.tile_info = resource_tiles.tile_info.brick_1
+	#add_child(tile_block_scene)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
