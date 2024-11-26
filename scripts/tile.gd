@@ -18,23 +18,19 @@ var matrix_top_level: Array
 var matrix_down_level: Dictionary
 var angle = 0
 var is_rotated = false
+var key_matrix_down = []
 
 func _ready() -> void:
 	var matrix = Basis()
 	tile_sprite.texture = tile_info["tile_src"]
 	matrix_top_level = tile_info["top_level"]
 	matrix_down_level = tile_info["down_level"]
-	#print(matrix_down_level["1"])
-	#Debug.print_debug_matrix(matrix_down_level["1"], "Default matrix top level tile")
-	#Debug.print_debug_matrix(matrix_top_level, "Default matrix top level tile")
-	#for block in matrix_down_level:
-		#for mt in matrix_down_level[block]:
-			#print(mt)
+	key_matrix_down = create_2darray_key_matrix()
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("rotate_right") && !is_rotated:
-		rotate_clockwise()
-	if Input.is_action_just_pressed("rotate_left") && !is_rotated:
+	#if Input.is_action_just_pressed("rotate_right") && !is_rotated:
+		#rotate_clockwise()
+	if Input.is_action_just_pressed("rotate") && !is_rotated:
 		rotate_counterclockwise()
 
 func getTopSide() -> Array:
@@ -80,7 +76,9 @@ func rotate_clockwise() -> void:
 	rotate_down_level_clockwise()
 	rotate_transform_clockwise()
 	if (Debug.ISDEBUG):
-		Debug.print_debug_matrix(matrix_top_level, "Rotate tile matrix clockwise")
+		Debug.print_debug_matrix(matrix_top_level, "Rotate tile top level matrix clockwise")
+		Debug.print_debug_matrix(key_matrix_down, "Rotate tile down level matrix clockwise")
+		print(matrix_down_level)
 
 func rotate_down_level_clockwise() -> void:
 	for block in matrix_down_level:
@@ -92,8 +90,81 @@ func rotate_down_level_clockwise() -> void:
 				new_row.append(mt[row][col])
 			rotated.append(new_row)
 		matrix_down_level[block] = rotated
-		if (Debug.ISDEBUG):
-			Debug.print_debug_matrix(matrix_down_level[block], "Rotate tile matrix down level %s clockwise" % block)
+	rotate_down_level_dictionary_keys_clockwise()
+
+func rotate_down_level_counterclockwise() -> void:	
+	for block in matrix_down_level:
+		var rotated = []
+		var mt = matrix_down_level[block]
+		for col in range(2, -1, -1):
+			var new_row = []
+			for row in range(3):
+				new_row.append(mt[row][col])
+			rotated.append(new_row)
+		matrix_down_level[block] = rotated
+	rotate_down_level_dictionary_keys_counterclockwise()
+		#matrix_down_level[block] = rotated
+		#if (Debug.ISDEBUG):
+			#print(matrix_down_level)
+			#Debug.print_debug_matrix(matrix_down_level[block], "Rotate tile matrix down level %s counterclockwise" % block)
+
+func create_2darray_key_matrix() -> Array:
+	var key_matrix = []
+	for block in matrix_down_level:
+		key_matrix.append(block)
+	var key_matrix_ar = []
+	var i = 0
+	for row in range(3):
+		var new_row = []
+		for col in range(3):
+			new_row.append(key_matrix[i])
+			i += 1
+		key_matrix_ar.append(new_row)
+	return key_matrix_ar
+
+func rotate_down_level_dictionary_keys_clockwise() -> void:
+	var rotated_keys = []
+	for i in range(3):
+		rotated_keys.append([key_matrix_down[2][i], key_matrix_down[1][i], key_matrix_down[0][i]])
+	
+	#for row in rotated_keys:
+		#row.reverse()
+	#for col in range(3):
+		#var new_row = []
+		#for row in range(2, -1, -1):
+			#new_row.append(key_matrix_down[row][col])
+		#rotated_keys.append(new_row)
+	
+	var rotated_dict = {}
+	for i in range(3):
+		for j in range(3):
+			var old_key = key_matrix_down[i][j]
+			var new_key = rotated_keys[i][j]
+			rotated_dict[new_key] = matrix_down_level[old_key]
+	matrix_down_level = rotated_dict
+	key_matrix_down = rotated_keys
+
+func rotate_down_level_dictionary_keys_counterclockwise() -> void:
+	var rotated_keys = []
+	#for col in range(2, -1, -1):
+		#var new_row = []
+		#for row in range(3):
+			#new_row.append(key_matrix_down[row][col])
+		#rotated_keys.append(new_row)
+	for i in range(3):
+		rotated_keys.append([key_matrix_down[0][i], key_matrix_down[1][i], key_matrix_down[2][i]])
+	
+	for row in rotated_keys:
+		row.reverse()
+	
+	var rotated_dict = {}
+	for i in range(3):
+		for j in range(3):
+			var old_key = key_matrix_down[i][j]
+			var new_key = rotated_keys[i][j]
+			rotated_dict[new_key] = matrix_down_level[old_key]
+	matrix_down_level = rotated_dict
+	key_matrix_down = rotated_keys
 
 func rotate_counterclockwise() -> void:
 	var rotated = []
@@ -103,9 +174,12 @@ func rotate_counterclockwise() -> void:
 			new_row.append(matrix_top_level[row][col])
 		rotated.append(new_row)
 	matrix_top_level = rotated
+	rotate_down_level_counterclockwise()
 	rotate_transform_counterclockwise()
 	if (Debug.ISDEBUG):
-		Debug.print_debug_matrix(matrix_top_level, "Rotate tile matrix counterclockwise")
+		Debug.print_debug_matrix(matrix_top_level, "Rotate tile top level matrix counterclockwise")
+		Debug.print_debug_matrix(key_matrix_down, "Rotate tile down level matrix counterclockwise")
+		print(matrix_down_level)
 
 func rotate_transform_clockwise() -> void:
 	var tween = create_tween()
