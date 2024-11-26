@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://p3xxbv6ud05s"]
+
+[ext_resource type="Script" path="res://scripts/player_camera.gd" id="1_y2a5n"]
+
+[node name="Player" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("1_y2a5n")
+move_speed = 700.0
+min_zoom = 0.1

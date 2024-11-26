@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bptgo02imkry1"]
+
+[ext_resource type="Script" path="res://scripts/map.gd" id="1_ssosk"]
+[ext_resource type="PackedScene" uid="uid://p3xxbv6ud05s" path="res://scenes/player.tscn" id="2_xsy5y"]
+
+[node name="Map" type="Node2D"]
+
+[node name="MapGrid" type="GridContainer" parent="." node_paths=PackedStringArray("grid_container")]
+custom_minimum_size = Vector2(256, 256)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+columns = 33
+script = ExtResource("1_ssosk")
+grid_container = NodePath(".")
+
+[node name="Player" parent="." instance=ExtResource("2_xsy5y")]
