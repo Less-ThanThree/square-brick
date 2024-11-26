@@ -24,7 +24,12 @@ func _ready() -> void:
 	tile_sprite.texture = tile_info["tile_src"]
 	matrix_top_level = tile_info["top_level"]
 	matrix_down_level = tile_info["down_level"]
-	Debug.print_debug_matrix(matrix_top_level, "Default matrix tile")
+	#print(matrix_down_level["1"])
+	#Debug.print_debug_matrix(matrix_down_level["1"], "Default matrix top level tile")
+	#Debug.print_debug_matrix(matrix_top_level, "Default matrix top level tile")
+	#for block in matrix_down_level:
+		#for mt in matrix_down_level[block]:
+			#print(mt)
 
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("rotate_right") && !is_rotated:
@@ -72,9 +77,23 @@ func rotate_clockwise() -> void:
 			new_row.append(matrix_top_level[row][col])
 		rotated.append(new_row)
 	matrix_top_level = rotated
+	rotate_down_level_clockwise()
 	rotate_transform_clockwise()
 	if (Debug.ISDEBUG):
 		Debug.print_debug_matrix(matrix_top_level, "Rotate tile matrix clockwise")
+
+func rotate_down_level_clockwise() -> void:
+	for block in matrix_down_level:
+		var rotated = []
+		var mt = matrix_down_level[block]
+		for col in range(3):
+			var new_row = []
+			for row in range(2, -1, -1):
+				new_row.append(mt[row][col])
+			rotated.append(new_row)
+		matrix_down_level[block] = rotated
+		if (Debug.ISDEBUG):
+			Debug.print_debug_matrix(matrix_down_level[block], "Rotate tile matrix down level %s clockwise" % block)
 
 func rotate_counterclockwise() -> void:
 	var rotated = []
