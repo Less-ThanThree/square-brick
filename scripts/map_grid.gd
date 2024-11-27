@@ -7,7 +7,12 @@ extends GridContainer
 @onready var GameTileScene = preload("res://components/tile.tscn")
 @onready var resource_tiles = load("res://resources/tiles/tilles.tres")
 
+signal tile_set
+signal tile_hovered
+signal tile_exited
+
 var mapTiles  = []
+var mapHoverTiles
 var currentTileInfo
 
 # Called when the node enters the scene tree for the first time.
@@ -32,45 +37,33 @@ func _create_empty_tile(row: int, col: int):
 	mapTiles[row].append(empty_tile_instance)
 
 func _on_empty_tile_click(row: int, col: int, empty_tile_instance: EmptyMapTile):
-	var index = row * grid_container.columns + col
-	var new_tile = GameTileScene.instantiate()
-	new_tile.tile_info = resource_tiles.tile_info.brick_1
-	
-	grid_container.remove_child(empty_tile_instance)
-	empty_tile_instance.queue_free()
-
-	grid_container.add_child(new_tile)
-	grid_container.move_child(new_tile, index)
-
-func _on_empty_tile_hovered(row: int, col: int, empty_tile_instance: EmptyMapTile):
-	print("hovered")
-	var index = row * grid_container.columns + col
-	var new_tile = GameTileScene.instantiate()
-	new_tile.tile_info = resource_tiles.tile_info[currentTileInfo]
-	
-	grid_container.remove_child(empty_tile_instance)
-	empty_tile_instance.queue_free()
-	
-	grid_container.add_child(new_tile)
-	grid_container.move_child(new_tile, index)
-
-func _on_empty_tile_exited(row: int, col: int, empty_tile_instance: EmptyMapTile):
-	print("exited")
-	
+	set_tile_map(row, col, currentTileInfo)
+	emit_signal("tile_set")
 	#var index = row * grid_container.columns + col
-	#var new_tile = EmptyTileScene.instantiate()
-	
-	#grid_container.remove_child(tile)
-	#tile.queue_free()
-	
+	#var new_tile = GameTileScene.instantiate()
+	#new_tile.tile_info = resource_tiles.tile_info[currentTileInfo]
+	#
+	#grid_container.remove_child(empty_tile_instance)
+	#empty_tile_instance.queue_free()
+#
 	#grid_container.add_child(new_tile)
 	#grid_container.move_child(new_tile, index)
+
+func _on_empty_tile_hovered(row: int, col: int, empty_tile_instance: EmptyMapTile):
+	emit_signal("tile_hovered", row, col, currentTileInfo)
+
+func _on_empty_tile_exited(row: int, col: int, empty_tile_instance: EmptyMapTile):
+	emit_signal("tile_exited", row, col)
 
 func set_tile_map(row: int, col: int, tile_info):
 	var index = row * grid_container.columns + col
 	var new_tile = GameTileScene.instantiate()
+	var empty_tile = grid_container.get_child(index)
 	new_tile.tile_info = resource_tiles.tile_info[tile_info]
 	new_tile.is_set = true
+	
+	grid_container.remove_child(empty_tile)
+	empty_tile.queue_free()
 
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)

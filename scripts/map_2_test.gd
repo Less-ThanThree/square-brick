@@ -55,3 +55,6 @@ func get_random_tile_deck():
 	emit_signal("new_tile", info)
 	remove_tile_deck_elem(rand_indx)
 	return info
+
+func _on_map_grid_tile_set() -> void:
+	get_random_tile_deck()

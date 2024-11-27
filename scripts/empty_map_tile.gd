@@ -5,8 +5,8 @@ signal tile_pressed
 signal tile_mouse_entered
 signal tile_mouse_exited
 
-var original_color : Color = Color(1, 1, 1)  # Исходный цвет панели (белый)
-var hover_color : Color = Color(0.5, 0.8, 1)  # Цвет при наведении (светло-синий)
+var original_color : Color = Color(1, 1, 1, 1)  # Исходный цвет панели (белый)
+var hover_color : Color = Color(0.5, 0.8, 1, 0)  # Цвет при наведении (светло-синий)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
