@@ -1,6 +1,7 @@
 extends Control
 
 @export var tile_info: Dictionary
+@export var is_set: bool
 
 @onready var tile_sprite = $Tile_img
 @onready var meeple_grid = $MeepleGrid
@@ -30,7 +31,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	#if Input.is_action_just_pressed("rotate_right") && !is_rotated:
 		#rotate_clockwise()
-	if Input.is_action_just_pressed("rotate") && !is_rotated:
+	if Input.is_action_just_pressed("rotate") && !is_rotated && !is_set:
 		rotate_counterclockwise()
 
 func getTopSide() -> Array:

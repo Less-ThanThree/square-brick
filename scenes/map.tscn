@@ -14,5 +14,7 @@ theme_override_constants/v_separation = 5
 columns = 33
 script = ExtResource("1_ssosk")
 grid_container = NodePath(".")
+metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("2_xsy5y")]
+metadata/_edit_use_anchors_ = true
