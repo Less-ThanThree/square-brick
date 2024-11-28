@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://cp7qsa6fgwq4h"]
+
+[ext_resource type="Script" path="res://scripts/ui/tile_deck.gd" id="1_kgjwu"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_s7rc6"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_s4wrf"]
+font_size = 32
+
+[node name="TileDeck" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_kgjwu")
+
+[node name="LabelDeck" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -208.0
+offset_top = -69.0
+offset_right = -64.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "В колоде:"
+label_settings = SubResource("LabelSettings_s7rc6")
+
+[node name="DeckCount" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -58.0
+offset_top = -67.0
+offset_right = -18.0
+offset_bottom = -22.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "0"
+label_settings = SubResource("LabelSettings_s4wrf")

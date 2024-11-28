@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://p3xxbv6ud05s"]
+[gd_scene load_steps=3 format=3 uid="uid://p3xxbv6ud05s"]
 
+[ext_resource type="PackedScene" uid="uid://cp7qsa6fgwq4h" path="res://components/ui/tile_deck.tscn" id="1_22nnm"]
 [ext_resource type="Script" path="res://scripts/player_camera.gd" id="1_y2a5n"]
 
 [node name="Player" type="Control"]
@@ -14,3 +15,9 @@ grow_vertical = 2
 script = ExtResource("1_y2a5n")
 move_speed = 700.0
 min_zoom = 0.1
+
+[node name="TileDeck" parent="Camera2D" instance=ExtResource("1_22nnm")]
+offset_left = 567.0
+offset_top = 307.0
+offset_right = 567.0
+offset_bottom = 307.0
