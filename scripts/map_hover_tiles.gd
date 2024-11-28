@@ -7,7 +7,10 @@ extends GridContainer
 @onready var GameTileScene = preload("res://components/tile.tscn")
 @onready var resource_tiles = load("res://resources/tiles/tilles.tres")
 
+signal is_tile_rotate
+
 var mapTiles  = []
+var currentTileRotateAngle = 0.0
 
 func _ready() -> void:
 	var block_size = Vector2(256, 256)  # Размер блоков 3x3
@@ -30,7 +33,9 @@ func _on_map_grid_tile_hovered(row, col, tile_info) -> void:
 	var index = row * grid_container.columns + col
 	var new_tile = GameTileScene.instantiate()
 	var empty_tile = grid_container.get_child(index)
+	new_tile.connect("is_rotate", _on_update_rotate_tile)
 	new_tile.tile_info = resource_tiles.tile_info[tile_info]
+	new_tile.angel = currentTileRotateAngle
 	
 	grid_container.remove_child(empty_tile)
 	empty_tile.queue_free()
@@ -51,3 +56,12 @@ func _on_map_grid_tile_exited(row, col) -> void:
 	
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
+
+func _on_update_rotate_tile(angle: float):
+	currentTileRotateAngle = angle
+	emit_signal("is_tile_rotate", angle)
+	if (Debug.ISDEBUG):
+		print("rotated %s" % [angle])
+
+func _on_map_grid_tile_set() -> void:
+	currentTileRotateAngle = 0.0

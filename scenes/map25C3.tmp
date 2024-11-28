@@ -36,10 +36,8 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_use_anchors_ = true
 
 [connection signal="new_tile" from="." to="MapGrid" method="_on_map_2_test_new_tile"]
-[connection signal="is_tile_rotate" from="MapHoverTiles" to="MapGrid" method="_on_map_hover_tiles_is_tile_rotate"]
 [connection signal="tile_exited" from="MapGrid" to="MapHoverTiles" method="_on_map_grid_tile_exited"]
 [connection signal="tile_hovered" from="MapGrid" to="MapHoverTiles" method="_on_map_grid_tile_hovered"]
 [connection signal="tile_set" from="MapGrid" to="." method="_on_map_grid_tile_set"]
-[connection signal="tile_set" from="MapGrid" to="MapHoverTiles" method="_on_map_grid_tile_set"]
 
 [editable path="Player"]

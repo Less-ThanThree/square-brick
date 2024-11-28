@@ -11,9 +11,10 @@ signal tile_set
 signal tile_hovered
 signal tile_exited
 
-var mapTiles  = []
+var mapTiles = []
 var mapHoverTiles
 var currentTileInfo
+var currentTileRotate = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -60,6 +61,7 @@ func set_tile_map(row: int, col: int, tile_info):
 	var new_tile = GameTileScene.instantiate()
 	var empty_tile = grid_container.get_child(index)
 	new_tile.tile_info = resource_tiles.tile_info[tile_info]
+	new_tile.angel = currentTileRotate
 	new_tile.is_set = true
 	
 	grid_container.remove_child(empty_tile)
@@ -67,6 +69,11 @@ func set_tile_map(row: int, col: int, tile_info):
 
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
+	
+	currentTileRotate = 0.0
 
 func _on_map_2_test_new_tile(info) -> void:
 	currentTileInfo = info
+
+func _on_map_hover_tiles_is_tile_rotate(angle) -> void:
+	currentTileRotate = angle

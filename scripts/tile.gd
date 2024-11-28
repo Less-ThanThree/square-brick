@@ -2,6 +2,7 @@ extends Control
 
 @export var tile_info: Dictionary
 @export var is_set: bool
+@export var angel: float = 0.0
 
 @onready var tile_sprite = $Tile_img
 @onready var meeple_grid = $MeepleGrid
@@ -15,14 +16,17 @@ extends Control
 @onready var panel_8 = $MeepleGrid/Panel8
 @onready var panel_9 = $MeepleGrid/Panel9
 
+signal is_rotate
+
 var matrix_top_level: Array
 var matrix_down_level: Dictionary
-var angle = 0
 var is_rotated = false
+var local_angle
 var key_matrix_down = []
 
 func _ready() -> void:
-	var matrix = Basis()
+	tile_sprite.rotation_degrees = angel
+	self.rotation_degrees = angel
 	tile_sprite.texture = tile_info["tile_src"]
 	matrix_top_level = tile_info["top_level"]
 	matrix_down_level = tile_info["down_level"]
@@ -33,6 +37,9 @@ func _process(delta: float) -> void:
 		#rotate_clockwise()
 	if Input.is_action_just_pressed("rotate") && !is_rotated && !is_set:
 		rotate_counterclockwise()
+
+func getAngle() -> int:
+	return local_angle
 
 func getTopSide() -> Array:
 	var array = [
@@ -184,25 +191,26 @@ func rotate_counterclockwise() -> void:
 
 func rotate_transform_clockwise() -> void:
 	var tween = create_tween()
-	var target_rot = self.rotation_degrees + 90
+	var target_rot = tile_sprite.rotation_degrees + 90
 	is_rotated = true
 	
-	tween.tween_property(self, "rotation_degrees", target_rot, 0.3)
+	tween.tween_property(tile_sprite, "rotation_degrees", target_rot, 0.15)
 	tween.set_ease(Tween.EASE_OUT_IN)
 	tween.play()
 	tween.finished.connect(_on_finish_rotate)
 
 func rotate_transform_counterclockwise() -> void:
 	var tween = create_tween()
-	var target_rot = self.rotation_degrees - 90
+	var target_rot = tile_sprite.rotation_degrees - 90
 	is_rotated = true
 	
-	tween.tween_property(self, "rotation_degrees", target_rot, 0.3)
+	tween.tween_property(tile_sprite, "rotation_degrees", target_rot, 0.15)
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.play()
 	tween.finished.connect(_on_finish_rotate)
 
 func _on_finish_rotate() -> void:
+	emit_signal("is_rotate", tile_sprite.rotation_degrees)
 	is_rotated = false
 
 func modulate_tween_meeple(panel: Panel, color: Color) -> void:
