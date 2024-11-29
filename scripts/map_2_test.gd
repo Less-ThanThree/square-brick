@@ -13,8 +13,7 @@ var current_tile
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var tiles = Debug.get_tile_resource()
-	for brick in tiles.tile_info:
-		tile_deck_array.append(tiles.tile_info[brick])
+	tile_deck_array = get_base_tile_array(tiles)
 	tile_deck.update_tile_count(tile_deck_array.size())
 	global_map_tile_array = create_empty_global_map_tile(map_grid.columns, map_grid.columns)
 	player.position = get_map_grid_center_position(map_grid.columns, map_grid.columns, Vector2(256, 256))
@@ -23,6 +22,15 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func get_base_tile_array(resource) -> Array:
+	var deck_base = resource.base_array_load
+	var tile_base_array = []
+	for brick in deck_base:
+		for i in range(deck_base[brick]):
+			tile_base_array.append(resource.tile_info[brick])
+	tile_base_array.shuffle()
+	return tile_base_array
 
 func get_map_grid_center_position(cols: int, rows: int, cell_size: Vector2) -> Vector2:
 	var grid_width = cols * cell_size.x
