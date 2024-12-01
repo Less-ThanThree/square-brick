@@ -16,6 +16,29 @@ enum TYPES {
 	CHURCH,
 }
 
+var base_array_load = {
+	\"brick_1\": 2,
+	\"brick_2\": 3,
+	\"brick_3\": 5,
+	\"brick_4\": 3,
+	\"brick_5\": 3,
+	\"brick_6\": 4,
+	\"brick_7\": 3,
+	\"brick_8\": 3,
+	\"brick_9\": 3,
+	\"brick_10\": 3,
+	\"brick_11\": 1,
+	\"brick_12\": 1,
+	\"brick_13\": 9,
+	\"brick_14\": 5,
+	\"brick_15\": 5,
+	\"brick_16\": 8,
+	\"brick_17\": 4,
+	\"brick_18\": 2,
+	\"brick_19\": 4,
+}
+
+
 var tile_info = {
 	\"brick_1\": {
 		\"top_level\": [
