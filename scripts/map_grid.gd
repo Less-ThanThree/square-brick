@@ -60,6 +60,7 @@ func set_tile_map(row: int, col: int, tile_info):
 	var index = row * grid_container.columns + col
 	var new_tile = GameTileScene.instantiate()
 	var empty_tile = grid_container.get_child(index)
+	tile_set.connect(new_tile._on_tile_set)
 	new_tile.tile_info = resource_tiles.tile_info[tile_info]
 	new_tile.angel = currentTileRotate
 	new_tile.is_set = true

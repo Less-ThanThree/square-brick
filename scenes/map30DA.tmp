@@ -1,0 +1,78 @@
+[gd_scene load_steps=6 format=3 uid="uid://cpq3ici2pt3lw"]
+
+[ext_resource type="Script" path="res://scripts/map_2_test.gd" id="1_xffso"]
+[ext_resource type="Script" path="res://scripts/map_grid.gd" id="1_y3hps"]
+[ext_resource type="Script" path="res://scripts/map_hover_tiles.gd" id="2_k4b5s"]
+[ext_resource type="PackedScene" uid="uid://p3xxbv6ud05s" path="res://scenes/player.tscn" id="2_sqwty"]
+[ext_resource type="Script" path="res://scripts/player_camera.gd" id="4_sda7h"]
+
+[node name="Map2Test" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("1_xffso")
+metadata/_edit_use_anchors_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+script = ExtResource("4_sda7h")
+move_speed = 700.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Player" parent="UI" instance=ExtResource("2_sqwty")]
+
+[node name="TileDeck" parent="UI/Player/UI" index="0"]
+z_index = 100
+
+[node name="Map" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MapHoverTiles" type="GridContainer" parent="Map" node_paths=PackedStringArray("grid_container")]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 256.0
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+script = ExtResource("2_k4b5s")
+grid_container = NodePath(".")
+row = 20
+col = 20
+metadata/_edit_use_anchors_ = true
+
+[node name="MapGrid" type="GridContainer" parent="Map" node_paths=PackedStringArray("grid_container")]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 256.0
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+script = ExtResource("1_y3hps")
+grid_container = NodePath(".")
+row = 20
+col = 20
+metadata/_edit_use_anchors_ = true
+
+[connection signal="new_tile" from="." to="Map/MapGrid" method="_on_map_2_test_new_tile"]
+[connection signal="is_tile_rotate" from="Map/MapHoverTiles" to="Map/MapGrid" method="_on_map_hover_tiles_is_tile_rotate"]
+[connection signal="tile_exited" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_tile_exited"]
+[connection signal="tile_hovered" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_tile_hovered"]
+[connection signal="tile_set" from="Map/MapGrid" to="." method="_on_map_grid_tile_set"]
+[connection signal="tile_set" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_tile_set"]
+
+[editable path="UI/Player"]

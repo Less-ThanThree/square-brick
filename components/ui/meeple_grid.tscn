@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbwh8a6t2pm5b"]
+
+[ext_resource type="Script" path="res://scripts/ui/meeple.gd" id="1_4thy4"]
+
+[node name="Meeple" type="Control"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+script = ExtResource("1_4thy4")
+
+[node name="MeepleGrid" type="GridContainer" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_right = 64.0
+grow_vertical = 0
+columns = 6
