@@ -1,8 +1,8 @@
-extends Node2D
+extends Control
 
-@onready var player = $Player
-@onready var tile_deck = $Player/Camera2D/TileDeck
-@onready var map_grid = $MapGrid
+@onready var tile_deck = $UI/Player/UI/TileDeck
+@onready var map_grid = $Map/MapGrid
+@onready var map = $Map
 
 signal new_tile
 
@@ -13,11 +13,13 @@ var current_tile
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var tiles = Debug.get_tile_resource()
+	var viewport_size = get_viewport().get_visible_rect().size
+	var map_center = get_map_grid_center_position(map_grid.columns, map_grid.columns, Vector2(256, 256))
 	tile_deck_array = get_base_tile_array(tiles)
 	tile_deck.update_tile_count(tile_deck_array.size())
 	global_map_tile_array = create_empty_global_map_tile(map_grid.columns, map_grid.columns)
-	player.position = get_map_grid_center_position(map_grid.columns, map_grid.columns, Vector2(256, 256))
 	get_center_element_grid(map_grid.columns, map_grid.columns)
+	map.position = viewport_size / 2 - map_center
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

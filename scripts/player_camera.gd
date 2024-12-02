@@ -1,5 +1,6 @@
 extends Camera2D
 
+#@onready var ui_component = $"../UI"
 
 # Movement settings
 @export var move_speed: float = 300.0
@@ -9,6 +10,7 @@ extends Camera2D
 
 func _process(delta):
 	var input_vector = Vector2.ZERO
+	var viewport_center = get_viewport().get_visible_rect().size / 2
 	
 	# WASD Movement
 	if Input.is_action_pressed("move_left"):
@@ -25,11 +27,15 @@ func _process(delta):
 	
 	# Move the camera
 	position += input_vector * move_speed * delta
+	
+	#ui_component.global_position = position + viewport_center
 
 func _input(event):
 	# Zoom with mouse wheel
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			print(zoom)
+			print(min_zoom)
 			zoom -= Vector2(zoom_speed, zoom_speed)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			zoom += Vector2(zoom_speed, zoom_speed)
@@ -37,3 +43,5 @@ func _input(event):
 		# Clamp zoom
 		zoom.x = clamp(zoom.x, min_zoom, max_zoom)
 		zoom.y = clamp(zoom.y, min_zoom, max_zoom)
+		
+		#ui_component.scale = Vector2(1 / zoom.x, 1 / zoom.y)

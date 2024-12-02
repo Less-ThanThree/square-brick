@@ -1,23 +1,36 @@
 [gd_scene load_steps=3 format=3 uid="uid://p3xxbv6ud05s"]
 
 [ext_resource type="PackedScene" uid="uid://cp7qsa6fgwq4h" path="res://components/ui/tile_deck.tscn" id="1_22nnm"]
-[ext_resource type="Script" path="res://scripts/player_camera.gd" id="1_y2a5n"]
+[ext_resource type="PackedScene" uid="uid://dbwh8a6t2pm5b" path="res://components/ui/meeple_grid.tscn" id="2_amtq0"]
 
 [node name="Player" type="Control"]
 layout_mode = 3
-anchors_preset = 15
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 
-[node name="Camera2D" type="Camera2D" parent="."]
-script = ExtResource("1_y2a5n")
-move_speed = 700.0
-min_zoom = 0.1
+[node name="UI" type="Control" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="TileDeck" parent="Camera2D" instance=ExtResource("1_22nnm")]
-offset_left = 567.0
-offset_top = 307.0
-offset_right = 567.0
-offset_bottom = 307.0
+[node name="TileDeck" parent="UI" instance=ExtResource("1_22nnm")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Meeple" parent="UI" instance=ExtResource("2_amtq0")]
+layout_mode = 1
