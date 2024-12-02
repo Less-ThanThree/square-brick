@@ -6,15 +6,7 @@ extends Control
 
 @onready var tile_sprite = $Tile_img
 @onready var meeple_grid = $MeepleGrid
-@onready var panel_1 = $MeepleGrid/Panel
-@onready var panel_2 = $MeepleGrid/Panel2
-@onready var panel_3 = $MeepleGrid/Panel3
-@onready var panel_4 = $MeepleGrid/Panel4
-@onready var panel_5 = $MeepleGrid/Panel5
-@onready var panel_6 = $MeepleGrid/Panel6
-@onready var panel_7 = $MeepleGrid/Panel7
-@onready var panel_8 = $MeepleGrid/Panel8
-@onready var panel_9 = $MeepleGrid/Panel9
+@onready var meeple_panel = load("res://components/ui/meeple_grid_tile.tscn")
 @onready var meeple = load("res://assets/meeple.png")
 
 signal is_rotate
@@ -22,7 +14,7 @@ signal is_rotate
 var matrix_top_level: Array
 var matrix_down_level: Dictionary
 var is_rotated = false
-var local_angle
+var local_angle = 0
 var key_matrix_down = []
 var zones = []
 var rotated_count = 1
@@ -34,12 +26,21 @@ func _ready() -> void:
 	matrix_top_level = tile_info["top_level"]
 	matrix_down_level = tile_info["down_level"]
 	key_matrix_down = create_2darray_key_matrix()
+	if angel == -90:
+		rotate_counterclockwise()
+	if angel == -180:
+		for i in range(2):
+			rotate_counterclockwise()
+	if angel == -270:
+		for i in range(3):
+			rotate_counterclockwise()
+	load_grid_meeple()
 
 func _process(delta: float) -> void:
 	#if Input.is_action_just_pressed("rotate_right") && !is_rotated:
 		#rotate_clockwise()
 	if Input.is_action_just_pressed("rotate") && !is_rotated && !is_set:
-		rotate_counterclockwise()
+		rotate_transform_counterclockwise()
 
 func getAngle() -> int:
 	return local_angle
@@ -186,11 +187,8 @@ func rotate_counterclockwise() -> void:
 		rotated.append(new_row)
 	matrix_top_level = rotated
 	rotate_down_level_counterclockwise()
-	rotate_transform_counterclockwise()
-	if rotated_count == 4:
-		rotated_count = 1
-	rotated_count += 1
-	print(rotated_count)
+	#rotate_transform_counterclockwise()
+	#rotate_grid_meeple()
 	if (Debug.ISDEBUG):
 		Debug.print_debug_matrix(matrix_top_level, "Rotate tile top level matrix counterclockwise")
 		Debug.print_debug_matrix(key_matrix_down, "Rotate tile down level matrix counterclockwise")
@@ -209,6 +207,9 @@ func rotate_transform_clockwise() -> void:
 func rotate_transform_counterclockwise() -> void:
 	var tween = create_tween()
 	var target_rot = tile_sprite.rotation_degrees - 90
+	local_angle = local_angle - 90
+	if local_angle <= -360:
+		local_angle = 0
 	is_rotated = true
 	
 	tween.tween_property(tile_sprite, "rotation_degrees", target_rot, 0.15)
@@ -216,8 +217,23 @@ func rotate_transform_counterclockwise() -> void:
 	tween.play()
 	tween.finished.connect(_on_finish_rotate)
 
+func rotate_grid_meeple():
+	var children = meeple_grid.get_children()
+	var rows = 3
+	var cols = children.size() / rows
+	var new_order = []
+	for col in range(cols):
+		for row in range(rows - 1, -1, -1):
+			var index = row * cols + col
+			new_order.append(children[index])
+	
+	for child in children:
+		meeple_grid.remove_child(child)
+	for child in new_order:
+		meeple_grid.add_child(child)
+
 func _on_finish_rotate() -> void:
-	emit_signal("is_rotate", tile_sprite.rotation_degrees)
+	emit_signal("is_rotate", local_angle)
 	is_rotated = false
 
 func modulate_tween_meeple(panel: Panel, color: Color) -> void:
@@ -226,6 +242,12 @@ func modulate_tween_meeple(panel: Panel, color: Color) -> void:
 	tween.tween_property(panel, "self_modulate", color, 0.2)
 	tween.set_ease(Tween.EASE_IN)
 	tween.play()
+
+func load_grid_meeple():
+	for col in range(9):
+		var meeple_tile = meeple_panel.instantiate()
+		meeple_tile.custom_minimum_size = Vector2(85, 85)
+		meeple_grid.add_child(meeple_tile)
 
 func find_zones():
 	var debug = []
@@ -237,10 +259,9 @@ func find_zones():
 	
 	for y in range(3):
 		for x in range(3):
-			if !visited[x][y]:
+			if !visited[y][x]:
 				var zone = flood_fill(Vector2(x, y), matrix_top_level[y][x], visited)
 				if zone.size() > 0:
-					#zones.append(zone)
 					var zone_type
 					match matrix_top_level[y][x]:
 						0:
@@ -255,7 +276,8 @@ func find_zones():
 						"Zone type": zone_type,
 						"Zones": zone
 					}
-					zones.append(dict)
+					if zone_type != "Deadend":
+						zones.append(dict)
 	print("Zones finds ", zones)
 
 func flood_fill(start, target_type, visited):
@@ -295,108 +317,27 @@ func get_center_meeple(points: Array) -> Vector2:
 	center = Vector2(sum_x / count, sum_y / count)
 	return Vector2(round(center.x), round(center.y))
 
-#func get_dominante_axis(points: Array) -> Vector2:
-	#var count_x = {}
-	#var count_y = {}
-	#
-	#for point in points:
-		#var x = point.x
-		#var y = point.y
-		#
-		#count_x[x] = count_x.get(x, 0) + 1
-		#count_y[y] = count_y.get(y, 0) + 1
-	#
-	#var max_x = count_x.values().max()
-	#var max_y = count_y.values().max()
-#
-	#if max_x >= max_y:
-		#var sum_x = 0
-		#for point in points:
-			#sum_x += point.x
-		#var center_x = sum_x / points.size()
-		#return Vector2(round(center_x), 0)
-		#
-
 func get_array_center(points: Array) -> Vector2:
 	var center_index = round(points.size() / 2)
 	return points[center_index]
 
 func _on_tile_set():
-	#if is_set:
-	find_zones()
-	var meeple_center = []
-	for zone in zones:
-		meeple_center.append(get_array_center(zone["Zones"]))
-	
-	print(meeple_center)
-	
-	for meeple in meeple_center:
-		var index = meeple.y * meeple_grid.columns + meeple.x
-		#if rotated_count == 1:
-			#
-		#if rotated_count == 2:
-			#index = meeple.x * meeple_grid.columns + meeple.y
-		#elif rotated_count
-		#else:
-			#index = meeple.y * meeple_grid.columns + meeple.x
-		set_avaliable_grid_meeple(index)
+	if Debug.ISDEBUG:
+		Debug.print_debug_matrix(matrix_top_level)
+	if !is_set:
+		find_zones()
+		var meeple_center = []
+		for zone in zones:
+			meeple_center.append(get_array_center(zone["Zones"]))
+		
+		print(angel)
+		for meeple in meeple_center:
+			var index = meeple.y * meeple_grid.columns + meeple.x
+			set_avaliable_grid_meeple(index)
+	is_set = true
 
 func set_avaliable_grid_meeple(index: int):
 	var tile_meeple = meeple_grid.get_child(index)
-	var tile_texture = tile_meeple.get_node("TextureRect")
+	var tile_texture = tile_meeple.get_node("TextureMeeple")
 	tile_texture.texture = meeple
 	tile_texture.self_modulate = Color(1, 1, 1, 0.5)
-
-func _on_panel_mouse_entered() -> void:
-	modulate_tween_meeple(panel_1, Color(1, 1, 1, 1))
-
-func _on_panel_mouse_exited() -> void:
-	modulate_tween_meeple(panel_1, Color(1, 1, 1, 0))
-
-func _on_panel_2_mouse_entered() -> void:
-	modulate_tween_meeple(panel_2, Color(1, 1, 1, 1))
-
-func _on_panel_2_mouse_exited() -> void:
-	modulate_tween_meeple(panel_2, Color(1, 1, 1, 0))
-
-func _on_panel_3_mouse_entered() -> void:
-	modulate_tween_meeple(panel_3, Color(1, 1, 1, 1))
-
-func _on_panel_3_mouse_exited() -> void:
-	modulate_tween_meeple(panel_3, Color(1, 1, 1, 0))
-
-func _on_panel_4_mouse_entered() -> void:
-	modulate_tween_meeple(panel_4, Color(1, 1, 1, 1))
-
-func _on_panel_4_mouse_exited() -> void:
-	modulate_tween_meeple(panel_4, Color(1, 1, 1, 0))
-
-func _on_panel_5_mouse_entered() -> void:
-	modulate_tween_meeple(panel_5, Color(1, 1, 1, 1))
-
-func _on_panel_5_mouse_exited() -> void:
-	modulate_tween_meeple(panel_5, Color(1, 1, 1, 0))
-
-func _on_panel_6_mouse_entered() -> void:
-	modulate_tween_meeple(panel_6, Color(1, 1, 1, 1))
-
-func _on_panel_6_mouse_exited() -> void:
-	modulate_tween_meeple(panel_6, Color(1, 1, 1, 0))
-
-func _on_panel_7_mouse_entered() -> void:
-	modulate_tween_meeple(panel_7, Color(1, 1, 1, 1))
-
-func _on_panel_7_mouse_exited() -> void:
-	modulate_tween_meeple(panel_7, Color(1, 1, 1, 0))
-
-func _on_panel_8_mouse_entered() -> void:
-	modulate_tween_meeple(panel_8, Color(1, 1, 1, 1))
-
-func _on_panel_8_mouse_exited() -> void:
-	modulate_tween_meeple(panel_8, Color(1, 1, 1, 0))
-
-func _on_panel_9_mouse_entered() -> void:
-	modulate_tween_meeple(panel_9, Color(1, 1, 1, 1))
-	
-func _on_panel_9_mouse_exited() -> void:
-	modulate_tween_meeple(panel_9, Color(1, 1, 1, 0))

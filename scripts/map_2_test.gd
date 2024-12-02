@@ -1,8 +1,6 @@
 extends Control
 
 @onready var tile_deck = $UI/Player/UI/TileDeck
-#@onready var tile_deck = $Player/CanvasLayer/UI/TileDeck
-#@onready var ui = $Player/CanvasLayer/UIцвц
 @onready var map_grid = $Map/MapGrid
 @onready var map = $Map
 
