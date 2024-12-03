@@ -6,10 +6,11 @@ extends Control
 
 @onready var tile_sprite = $Tile_img
 @onready var meeple_grid = $MeepleGrid
-@onready var meeple_panel = load("res://components/ui/meeple_grid_tile.tscn")
 @onready var meeple = load("res://assets/meeple.png")
 
 signal is_rotate
+signal meeple_set
+signal meeple_skip
 
 var matrix_top_level: Array
 var matrix_down_level: Dictionary
@@ -34,7 +35,6 @@ func _ready() -> void:
 	if angel == -270:
 		for i in range(3):
 			rotate_counterclockwise()
-	load_grid_meeple()
 
 func _process(delta: float) -> void:
 	#if Input.is_action_just_pressed("rotate_right") && !is_rotated:
@@ -243,12 +243,6 @@ func modulate_tween_meeple(panel: Panel, color: Color) -> void:
 	tween.set_ease(Tween.EASE_IN)
 	tween.play()
 
-func load_grid_meeple():
-	for col in range(9):
-		var meeple_tile = meeple_panel.instantiate()
-		meeple_tile.custom_minimum_size = Vector2(85, 85)
-		meeple_grid.add_child(meeple_tile)
-
 func find_zones():
 	var debug = []
 	var visited = []
@@ -330,7 +324,6 @@ func _on_tile_set():
 		for zone in zones:
 			meeple_center.append(get_array_center(zone["Zones"]))
 		
-		print(angel)
 		for meeple in meeple_center:
 			var index = meeple.y * meeple_grid.columns + meeple.x
 			set_avaliable_grid_meeple(index)
@@ -339,5 +332,12 @@ func _on_tile_set():
 func set_avaliable_grid_meeple(index: int):
 	var tile_meeple = meeple_grid.get_child(index)
 	var tile_texture = tile_meeple.get_node("TextureMeeple")
+	tile_meeple.is_meeple = true
 	tile_texture.texture = meeple
 	tile_texture.self_modulate = Color(1, 1, 1, 0.5)
+
+func _on_meeple_grid_meeple_set() -> void:
+	emit_signal("meeple_set")
+
+func _on_meeple_skip() -> void:
+	emit_signal("meeple_skip")

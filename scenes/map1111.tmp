@@ -30,7 +30,7 @@ move_speed = 700.0
 
 [node name="Player" parent="UI" instance=ExtResource("2_sqwty")]
 
-[node name="TileDeck" parent="UI/Player/UI" index="1"]
+[node name="TileDeck" parent="UI/Player/UI" index="0"]
 z_index = 100
 
 [node name="Map" type="Control" parent="."]
@@ -72,8 +72,6 @@ metadata/_edit_use_anchors_ = true
 [connection signal="is_tile_rotate" from="Map/MapHoverTiles" to="Map/MapGrid" method="_on_map_hover_tiles_is_tile_rotate"]
 [connection signal="meeple_set" from="Map/MapGrid" to="." method="_on_map_grid_meeple_set"]
 [connection signal="meeple_set" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_meeple_set"]
-[connection signal="meeple_skip" from="Map/MapGrid" to="." method="_on_map_grid_meeple_skip"]
-[connection signal="meeple_skip" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_meeple_skip"]
 [connection signal="tile_exited" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_tile_exited"]
 [connection signal="tile_hovered" from="Map/MapGrid" to="Map/MapHoverTiles" method="_on_map_grid_tile_hovered"]
 [connection signal="tile_set" from="Map/MapGrid" to="." method="_on_map_grid_tile_set"]

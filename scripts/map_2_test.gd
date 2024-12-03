@@ -52,7 +52,7 @@ func get_center_element_grid(cols: int, rows: int):
 	var center_row = (rows / 2)
 	var center_col = (cols / 2)
 	var tile_first_tile = get_random_tile_deck()
-	map_grid.set_tile_map(center_row, center_col, tile_first_tile)
+	map_grid.set_first_map_tile(center_row, center_col, tile_first_tile)
 	current_tile = get_random_tile_deck()
 
 func remove_tile_deck_elem(index: int):
@@ -66,5 +66,8 @@ func get_random_tile_deck():
 	remove_tile_deck_elem(rand_indx)
 	return info
 
-func _on_map_grid_tile_set() -> void:
+func _on_map_grid_meeple_set() -> void:
+	get_random_tile_deck()
+
+func _on_map_grid_meeple_skip() -> void:
 	get_random_tile_deck()
