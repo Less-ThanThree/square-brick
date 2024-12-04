@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dnf78x1w5i04b"]
+[gd_scene load_steps=3 format=3 uid="uid://dnf78x1w5i04b"]
 
 [ext_resource type="Script" path="res://scripts/tile.gd" id="1_yw7og"]
+[ext_resource type="Script" path="res://scripts/meeple_grid.gd" id="2_wvxkg"]
 
 [node name="Tile" type="Control"]
 clip_contents = true
@@ -57,3 +58,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 columns = 3
+script = ExtResource("2_wvxkg")
+
+[connection signal="meeple_skip" from="." to="MeepleGrid" method="_on_tile_meeple_skip"]
+[connection signal="meeple_set" from="MeepleGrid" to="." method="_on_meeple_grid_meeple_set"]
