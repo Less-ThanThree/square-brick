@@ -266,13 +266,16 @@ func find_zones():
 							zone_type = "Road"
 						3:
 							zone_type = "Deadend"
+						5:
+							zone_type = "Build_corner"
 					var dict = {
 						"Zone type": zone_type,
 						"Zones": zone
 					}
-					if zone_type != "Deadend":
+					if zone_type != "Deadend" && zone_type != "Build_corner":
 						zones.append(dict)
-	print("Zones finds ", zones)
+	if !is_set && Debug.ISDEBUG:
+		print("Zones finds ", zones)
 
 func flood_fill(start, target_type, visited):
 	var stack = [start]
@@ -316,9 +319,9 @@ func get_array_center(points: Array) -> Vector2:
 	return points[center_index]
 
 func _on_tile_set():
-	if Debug.ISDEBUG:
-		Debug.print_debug_matrix(matrix_top_level)
 	if !is_set:
+		if Debug.ISDEBUG:
+			Debug.print_debug_matrix(matrix_top_level)
 		find_zones()
 		var meeple_center = []
 		for zone in zones:
