@@ -14,8 +14,8 @@ signal meeple_set
 signal meeple_skip
 
 const MATRIX_SIZE = 20
-const MATRIX_SIZE_X2 = 60
-const BLOCK_SIZE = 3
+const MATRIX_SIZE_X2 = 100
+const BLOCK_SIZE = 5
 
 var mapTiles = []
 var dfsMapMatrix = []
@@ -35,12 +35,19 @@ var directions_x8 = [
 	Vector2(1, 1)
 ]
 
+var directions = [
+	Vector2(1, 0),  # вправо
+	Vector2(-1, 0), # влево
+	Vector2(0, 1),  # вниз
+	Vector2(0, -1)  # вверх
+]
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var block_size = Vector2(256, 256)  # Размер блоков 3x3
 	grid_container.columns = col
 	dfsMapMatrix = create_empty_dfs(row, col)
-	dfsGlobalMapMatrix = create_empty_dfs(60, 60, -1)
+	dfsGlobalMapMatrix = create_empty_dfs(100, 100, -1)
 	
 	# Генерация карты
 	for row in range(col):
@@ -91,7 +98,8 @@ func set_tile_map(row: int, col: int, tile_info):
 	tile_set.connect(new_tile._on_tile_set)
 	meeple_skip.connect(new_tile._on_meeple_skip)
 	new_tile.connect("meeple_set", _on_meeple_set)
-	new_tile.tile_info = resource_tiles.tile_info[tile_info]
+	new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
+	new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
 	new_tile.angel = currentTileRotate
 	
 	grid_container.remove_child(empty_tile)
@@ -102,9 +110,9 @@ func set_tile_map(row: int, col: int, tile_info):
 	
 	currentTileRotate = 0.0
 	
-	fill_block_in_matrix(row, col, new_tile.tile_info["top_level"])
-	
-	print(find_zones())
+	#Debug.print_debug_matrix(new_tile.tile_info["top_level"])
+	#fill_block_in_matrix(row, col, new_tile.tile_info["top_level"])
+
 	#var zone = find_zones()
 	#print_zones(zone)
 	#dfsMapMatrix[row][col] = new_tile.tile_info["top_level"]
@@ -118,7 +126,8 @@ func set_first_map_tile(row: int, col: int, tile_info):
 	tile_set.connect(new_tile._on_tile_set)
 	#meeple_skip.connect(new_tile._on_meeple_skip)
 	#new_tile.connect("meeple_set", _on_meeple_set)
-	new_tile.tile_info = resource_tiles.tile_info[tile_info]
+	new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
+	new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
 	new_tile.angel = currentTileRotate
 	new_tile.is_set = true
 	
@@ -127,9 +136,16 @@ func set_first_map_tile(row: int, col: int, tile_info):
 
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
+
+func _on_tile_ready(row, col, node):
+	fill_block_in_matrix(row, col, node.get_top_level_matrix())
 	
-	fill_block_in_matrix(row, col, new_tile.tile_info["top_level"])
-	#dfsMapMatrix[row][col] = new_tile.tile_info["top_level"]
+	var zones = find_zones_2()
+	print("ZONE MAP\n")
+	print("------")
+	print(zones)
+	print("-----")
+	print(finding_complete_buildings(zones))
 
 func skip_meeple_set() -> void:
 	Player.update_current_state(Player.STATE.CHOOSE_TILE)
@@ -147,6 +163,103 @@ func _on_meeple_set():
 	Player.update_current_state(Player.STATE.CHOOSE_TILE)
 	isCurrentMeepleChoose = false
 	emit_signal("meeple_set")
+
+func find_zones_2():
+	var zones = []
+	var visited = []
+	for y in range(MATRIX_SIZE_X2):
+		visited.append([])
+		for x in range(MATRIX_SIZE_X2):
+			visited[y].append(false)
+	
+	for y in range(MATRIX_SIZE_X2):
+		for x in range(MATRIX_SIZE_X2):
+			if !visited[y][x] && dfsGlobalMapMatrix[y][x] != -1:
+				var zone = flood_fill(Vector2(x, y), dfsGlobalMapMatrix[y][x], visited)
+				if zone.size() > 0:
+					var zone_type
+					match dfsGlobalMapMatrix[y][x]:
+						0:
+							zone_type = "Field"
+						1:
+							zone_type = "Build"
+						2:
+							zone_type = "Road"
+						3:
+							zone_type = "Deadend"
+						5:
+							zone_type = "Build_corner"
+					var dict = {
+						"Zone type": zone_type,
+						"Zones": zone
+					}
+					if zone_type != "Deadend" && zone_type != "Build_corner":
+						zones.append(dict)
+	return zones
+
+func flood_fill(start, target_type, visited):
+	var stack = [start]
+	var zone = []
+	
+	while stack.size() > 0:
+		var current = stack.pop_back()
+		var x = current.x
+		var y = current.y
+		
+		if x < 0 || y < 0 || x >= MATRIX_SIZE_X2 || y >= MATRIX_SIZE_X2:
+			continue
+		if visited[y][x] || dfsGlobalMapMatrix[y][x] != target_type:
+			continue
+		
+		var has_adjacent_one = false
+		var directions = [
+			Vector2(1, 0),  # вправо
+			Vector2(-1, 0), # влево
+			Vector2(0, 1),  # вниз
+			Vector2(0, -1)  # вверх
+		]
+		for dir in directions_x8:
+			var nx = x + dir.x
+			var ny = y + dir.y
+			if nx >= 0 && ny >= 0 && nx < MATRIX_SIZE_X2 && ny < MATRIX_SIZE_X2:
+				if dfsGlobalMapMatrix[ny][nx] == 1:
+					has_adjacent_one = true
+					break
+		
+		if !has_adjacent_one && target_type != 1:
+			continue
+		
+		visited[y][x] = true
+		zone.append(current)
+		
+		stack.append(Vector2(x + 1, y))
+		stack.append(Vector2(x - 1, y))
+		stack.append(Vector2(x, y + 1))
+		stack.append(Vector2(x, y - 1))
+	
+	return zone
+
+func is_wall_closed(x, y):
+	var wall_found = false
+	var open_side_found = false
+	
+	for dir in directions_x8:
+		var nx = x + dir.x
+		var ny = y + dir.y
+		if nx < 0 || nx >= MATRIX_SIZE_X2 || ny < 0 || ny >= MATRIX_SIZE_X2:
+			continue
+		
+		var neignbor_value = dfsGlobalMapMatrix[ny][nx] 
+		
+		if neignbor_value == 1:
+			continue
+		
+		if neignbor_value == 5:
+			wall_found = true
+		elif neignbor_value != 1:
+			open_side_found = true
+	
+	return wall_found && !open_side_found
 
 #func find_zones_map():
 	#var state_enum = resource_tiles.TYPES
@@ -273,99 +386,180 @@ func _on_meeple_set():
 			#break
 	#return valid
 
-func print_zones(zones):
-	for zone in zones:
-		print("Zone:")
-		for cell in zone:
-			print(cell)
-		print("----")
+func finding_complete_buildings(zone_data):
+	var complete_bulildings = []
+	for zone in zone_data:
+		if zone["Zone type"] == "Build" && "Zones" in zone:
+			var building_zone = zone["Zones"]
+			var building_complete = true
+			
+			for coord in building_zone:
+				var x = coord[0]
+				var y = coord[1]
+				
+				if !is_wall_closed(x, y):
+					building_complete = false
+					break
+			
+			if building_complete:
+				complete_bulildings.append(zone)
+	return complete_bulildings
+
+#func print_zones(zones):
+	#for zone in zones:
+		#print("Zone:")
+		#for cell in zone:
+			#print(cell)
+		#print("----")
 
 func fill_block_in_matrix(i, j, block):
 	var start_x = i * BLOCK_SIZE
 	var start_y = j * BLOCK_SIZE
 	
-	if start_x + 2 >= MATRIX_SIZE_X2 || start_y + 2 >= MATRIX_SIZE_X2:
+	if start_x + BLOCK_SIZE > MATRIX_SIZE_X2 || start_y + BLOCK_SIZE > MATRIX_SIZE_X2:
 		return
 	
 	for x in range(BLOCK_SIZE):
 		for y in range(BLOCK_SIZE):
 			dfsGlobalMapMatrix[start_x + x][start_y + y] = block[x][y]
 
-func find_zones():
-	var visited = []
-	for i in range(MATRIX_SIZE_X2):
-		visited.append([])
-		for j in range(MATRIX_SIZE_X2):
-			visited[i].append(false)
-	
-	var zones = []
-	
-	for i in range(MATRIX_SIZE_X2):
-		for j in range(MATRIX_SIZE_X2):
-			if visited[i][j] == false && dfsGlobalMapMatrix[i][j] != -1:
-				var zone = []
-				var type_of_zone = dfsGlobalMapMatrix[i][j]
-				dfs(i, j, visited, zone, type_of_zone)
-				if zone.size() > 0:
-					#zones.append(zone)
-					var zone_type
-					match type_of_zone:
-						0:
-							zone_type = "Field"
-						1:
-							zone_type = "Build"
-						2:
-							zone_type = "Road"
-						3:
-							zone_type = "Deadend"
-						5:
-							zone_type = "Build_corner"
-					var dict = {
-						"Zone type": zone_type,
-						"Zones": zone
-					}
-					zones.append(dict)
-	return zones
+#func find_zones():
+	#var visited = []
+	#for i in range(MATRIX_SIZE_X2):
+		#visited.append([])
+		#for j in range(MATRIX_SIZE_X2):
+			#visited[i].append(false)
+	#
+	#var zones = []
+	#
+	#for i in range(MATRIX_SIZE_X2):
+		#for j in range(MATRIX_SIZE_X2):
+			#if visited[i][j] == false && dfsGlobalMapMatrix[i][j] != -1:
+				#var zone = []
+				#var type_of_zone = dfsGlobalMapMatrix[i][j]
+				#dfs_2(i, j, visited, zone, type_of_zone)
+				#if zone.size() > 0:
+					##zones.append(zone)
+					#var zone_type
+					#match type_of_zone:
+						#0:
+							#zone_type = "Field"
+						#1:
+							#zone_type = "Build"
+						#2:
+							#zone_type = "Road"
+						#3:
+							#zone_type = "Deadend"
+						#5:
+							#zone_type = "Build_corner"
+					#var dict = {
+						#"Zone type": zone_type,
+						#"Zones": zone
+					#}
+					#zones.append(dict)
+	#return zones
 
-func dfs(x, y, visited, zone, type_of_zone):
-	var directions = [
-		Vector2(0, 1),  # вниз
-		Vector2(0, -1),  # вверх
-		Vector2(1, 0),  # вправо
-		Vector2(-1, 0)   # влево
-	]	
-	
-	if x < 0 || x >= MATRIX_SIZE_X2 || y < 0 || y >= MATRIX_SIZE_X2:
-		return
-	if visited[x][y] || dfsGlobalMapMatrix[x][y] != type_of_zone || dfsGlobalMapMatrix[x][y] == -1:
-		return
-	
-	visited[x][y] = true
-	zone.append(Vector2(x, y))
-	
-	for dir in directions:
-		var nx = x + dir.x
-		var ny = y + dir.y
-		dfs(nx, ny, visited, zone, type_of_zone)
+#func is_edge(x, y):
+	#for dir in directions_x8:
+		#var nx = x + dir.x
+		#var ny = y + dir.y
+		#if nx < 0 || nx > MATRIX_SIZE_X2 || ny < 0 || ny >= MATRIX_SIZE_X2:
+			#return true
+		#if dfsGlobalMapMatrix[nx][ny] != 1 && dfsGlobalMapMatrix[nx][ny] != 5:
+			#return true
+	#return false
 
-func dfs_build(curr_x, curr_y, visited, zone):	
-	if curr_x < 0 or curr_x >= MATRIX_SIZE_X2 or curr_y < 0 or curr_y >= MATRIX_SIZE_X2:
-		return
-	
-	if visited.has([curr_x, curr_y]):
-			return
-	
-	visited.append([curr_x, curr_y])
-	
-	if dfsGlobalMapMatrix[curr_x][curr_y] != 1:
-		return
-	
-	zone.append([curr_x, curr_y])
-	
-	for dir in directions_x8:
-		var new_x = curr_x + dir.x
-		var new_y = curr_y + dir.y
-		dfs_build(new_x, new_y, visited, zone)
+#func is_building_complete(building_zones):
+	#for coord in building_zones:
+		#var x = coord[0]
+		#var y = coord[1]
+		#if is_edge(x, y):
+			#for dir in directions_x8:
+				#var nx = x + dir.x
+				#var ny = y + dir.y
+				#if nx < 0 || nx >= MATRIX_SIZE_X2 || ny < 0 || ny >= MATRIX_SIZE_X2:
+					#return false
+				#var neighbor_value = dfsGlobalMapMatrix[nx][ny]
+				#if neighbor_value != 0 || neighbor_value != 2 || neighbor_value != 5:
+					#return false
+	#return true
+
+
+#
+#func dfs(x, y, visited, zone, type_of_zone):
+	#var directions = [
+		#Vector2(0, 1),  # вниз
+		#Vector2(0, -1),  # вверх
+		#Vector2(1, 0),  # вправо
+		#Vector2(-1, 0)   # влево
+	#]	
+	#
+	#if x < 0 || x >= MATRIX_SIZE_X2 || y < 0 || y >= MATRIX_SIZE_X2:
+		#return
+	#if visited[x][y] || dfsGlobalMapMatrix[x][y] != type_of_zone || dfsGlobalMapMatrix[x][y] == -1:
+		#return
+	#
+	#visited[x][y] = true
+	#zone.append(Vector2(x, y))
+	#
+	#for dir in directions:
+		#var nx = x + dir.x
+		#var ny = y + dir.y
+		#dfs(nx, ny, visited, zone, type_of_zone)
+#
+#func dfs_2(x, y, visited, zone, type_of_zone):
+	#var directions = [
+		#Vector2(0, 1),  # вниз
+		#Vector2(0, -1),  # вверх
+		#Vector2(1, 0),  # вправо
+		#Vector2(-1, 0)   # влево
+	#]	
+	#
+	#if x < 0 || x >= MATRIX_SIZE_X2 || y < 0 || y >= MATRIX_SIZE_X2:
+		#return
+	#if visited[x][y]:
+		#return
+	#if dfsGlobalMapMatrix[x][y] != type_of_zone:
+		#return
+	#
+	#var has_adjacent_same_zone = false
+	#for dir in directions:
+		#var nx = x + dir.x
+		#var ny = y + dir.y
+		#if nx >= 0 && nx < MATRIX_SIZE_X2 && ny >= 0 && ny < MATRIX_SIZE_X2:
+			#if dfsGlobalMapMatrix[nx][ny] == 1:
+				#has_adjacent_same_zone = true
+				#break
+	#
+	#if !has_adjacent_same_zone:
+		#return false
+	#
+	#visited[x][y] = true
+	#zone.append(Vector2(x, y))
+	#
+	#for dir in directions:
+		#var nx = x + dir.x
+		#var ny = y + dir.y
+		#dfs_2(nx, ny, visited, zone, type_of_zone)
+#
+#func dfs_build(curr_x, curr_y, visited, zone):	
+	#if curr_x < 0 or curr_x >= MATRIX_SIZE_X2 or curr_y < 0 or curr_y >= MATRIX_SIZE_X2:
+		#return
+	#
+	#if visited.has([curr_x, curr_y]):
+			#return
+	#
+	#visited.append([curr_x, curr_y])
+	#
+	#if dfsGlobalMapMatrix[curr_x][curr_y] != 1:
+		#return
+	#
+	#zone.append([curr_x, curr_y])
+	#
+	#for dir in directions_x8:
+		#var new_x = curr_x + dir.x
+		#var new_y = curr_y + dir.y
+		#dfs_build(new_x, new_y, visited, zone)
 #func find_building_zone(x, y):
 	#var visited = []
 	#var zone = []
@@ -415,33 +609,33 @@ func dfs_build(curr_x, curr_y, visited, zone):
 		#
 			#var neighbor_value = dfsGlobalMapMatrix[new_x][new_y]
 
-func find_building_zone(x, y):
-	var visited = []
-	var zone = []
-	
-	dfs_build(x, y, visited, zone)
-	
-	for cell in zone:
-		var cx = cell[0]
-		var cy = cell[1]
-		
-		var is_valid = true
-		for dir in directions_x8:
-			var new_x = cx + dir.x
-			var new_y = cy + dir.y
-			
-			if new_x < 0 or new_x >= MATRIX_SIZE_X2 or new_y < 0 or new_y >= MATRIX_SIZE_X2:
-				continue
-			
-			var neighbor_value = dfsGlobalMapMatrix[new_x][new_y]
-			if neighbor_value == -1:
-				is_valid = false
-				break
-			if neighbor_value != 0 && neighbor_value != 2 && neighbor_value != 5:
-				is_valid = false
-				break
-		
-		if !is_valid:
-			zone.erase(cell)
-	
-	return zone
+#func find_building_zone(x, y):
+	#var visited = []
+	#var zone = []
+	#
+	#dfs_build(x, y, visited, zone)
+	#
+	#for cell in zone:
+		#var cx = cell[0]
+		#var cy = cell[1]
+		#
+		#var is_valid = true
+		#for dir in directions:
+			#var new_x = cx + dir.x
+			#var new_y = cy + dir.y
+			#
+			#if new_x < 0 or new_x >= MATRIX_SIZE_X2 or new_y < 0 or new_y >= MATRIX_SIZE_X2:
+				#continue
+			#
+			#var neighbor_value = dfsGlobalMapMatrix[new_x][new_y]
+			#if neighbor_value == -1:
+				#is_valid = false
+				#break
+			#if neighbor_value != 0 && neighbor_value != 2 && neighbor_value != 5:
+				#is_valid = false
+				#break
+		#
+		#if !is_valid:
+			#zone.erase(cell)
+	#
+	#return zone

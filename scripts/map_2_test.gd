@@ -26,11 +26,12 @@ func _process(delta: float) -> void:
 	pass
 
 func get_base_tile_array(resource) -> Array:
-	var deck_base = resource.base_array_load
+	#var deck_base = resource.base_array_load
+	var deck_base = resource.test_stack_x5
 	var tile_base_array = []
 	for brick in deck_base:
 		for i in range(deck_base[brick]):
-			tile_base_array.append(resource.tile_info[brick])
+			tile_base_array.append(resource.tile_info_x5[brick])
 	tile_base_array.shuffle()
 	return tile_base_array
 

@@ -36,7 +36,7 @@ func _on_map_grid_tile_hovered(row, col, tile_info) -> void:
 		var new_tile = GameTileScene.instantiate()
 		var empty_tile = grid_container.get_child(index)
 		new_tile.connect("is_rotate", _on_update_rotate_tile)
-		new_tile.tile_info = resource_tiles.tile_info[tile_info]
+		new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
 		new_tile.angel = currentTileRotateAngle
 		
 		grid_container.remove_child(empty_tile)

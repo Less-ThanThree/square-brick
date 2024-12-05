@@ -79,9 +79,9 @@ func getRightSide() -> Array:
 
 func rotate_clockwise() -> void:
 	var rotated = []
-	for col in range(3):
+	for col in range(5):
 		var new_row = []
-		for row in range(2, -1, -1):
+		for row in range(4, -1, -1):
 			new_row.append(matrix_top_level[row][col])
 		rotated.append(new_row)
 	matrix_top_level = rotated
@@ -180,9 +180,9 @@ func rotate_down_level_dictionary_keys_counterclockwise() -> void:
 
 func rotate_counterclockwise() -> void:
 	var rotated = []
-	for col in range(2, -1, -1):
+	for col in range(4, -1, -1):
 		var new_row = []
-		for row in range(3):
+		for row in range(5):
 			new_row.append(matrix_top_level[row][col])
 		rotated.append(new_row)
 	matrix_top_level = rotated
@@ -246,13 +246,13 @@ func modulate_tween_meeple(panel: Panel, color: Color) -> void:
 func find_zones():
 	var debug = []
 	var visited = []
-	for y in range(3):
+	for y in range(5):
 		visited.append([])
-		for x in range(3):
+		for x in range(5):
 			visited[y].append(false)
 	
-	for y in range(3):
-		for x in range(3):
+	for y in range(5):
+		for x in range(5):
 			if !visited[y][x]:
 				var zone = flood_fill(Vector2(x, y), matrix_top_level[y][x], visited)
 				if zone.size() > 0:
@@ -286,7 +286,7 @@ func flood_fill(start, target_type, visited):
 		var x = current.x
 		var y = current.y
 		
-		if x < 0 || y < 0 || x >= 3 || y >= 3:
+		if x < 0 || y < 0 || x >= 5 || y >= 5:
 			continue
 		if visited[y][x] || matrix_top_level[y][x] != target_type:
 			continue
@@ -328,7 +328,7 @@ func _on_tile_set():
 			meeple_center.append(get_array_center(zone["Zones"]))
 		
 		for meeple in meeple_center:
-			var index = meeple.y * meeple_grid.columns + meeple.x
+			var index = (meeple.y - 2) * meeple_grid.columns + (meeple.x - 2)
 			set_avaliable_grid_meeple(index)
 	is_set = true
 
@@ -344,3 +344,6 @@ func _on_meeple_grid_meeple_set() -> void:
 
 func _on_meeple_skip() -> void:
 	emit_signal("meeple_skip")
+
+func get_top_level_matrix() -> Array:
+	return matrix_top_level
