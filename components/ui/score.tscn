@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0feldryc1xyc"]
+
+[ext_resource type="Script" path="res://scripts/ui/score.gd" id="1_2en7m"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_m5qr4"]
+font_size = 32
+
+[node name="Score" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2en7m")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.913
+anchor_right = 0.958
+anchor_bottom = 0.035
+offset_left = 0.223999
+offset_right = 0.383911
+offset_bottom = 0.32
+grow_horizontal = 0
+text = "Очки: "
+label_settings = SubResource("LabelSettings_m5qr4")

@@ -7,12 +7,19 @@ enum STATE {
 
 var meeples = 6
 var current_state = STATE.CHOOSE_TILE
+var score = 0
 
 func increase_meeple(count: int):
 	meeples += count
 
 func decrease_meeple(count: int):
 	meeples -= count
+
+func increase_score(count: int):
+	score += count
+
+func get_score_amount() -> int:
+	return score
 
 func get_meeples_amount() -> int:
 	return meeples

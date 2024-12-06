@@ -20,6 +20,8 @@ const BLOCK_SIZE = 5
 var mapTiles = []
 var dfsMapMatrix = []
 var dfsGlobalMapMatrix = []
+var mapIndex = []
+var mapFindZonesSize = 0
 var mapHoverTiles
 var currentTileInfo
 var currentTileRotate = 0.0
@@ -102,6 +104,8 @@ func set_tile_map(row: int, col: int, tile_info):
 	new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
 	new_tile.angel = currentTileRotate
 	
+	mapIndex.append(index)
+	
 	grid_container.remove_child(empty_tile)
 	empty_tile.queue_free()
 
@@ -109,15 +113,6 @@ func set_tile_map(row: int, col: int, tile_info):
 	grid_container.move_child(new_tile, index)
 	
 	currentTileRotate = 0.0
-	
-	#Debug.print_debug_matrix(new_tile.tile_info["top_level"])
-	#fill_block_in_matrix(row, col, new_tile.tile_info["top_level"])
-
-	#var zone = find_zones()
-	#print_zones(zone)
-	#dfsMapMatrix[row][col] = new_tile.tile_info["top_level"]
-	
-	#find_zones_map()
 
 func set_first_map_tile(row: int, col: int, tile_info):
 	var index = row * grid_container.columns + col
@@ -131,6 +126,8 @@ func set_first_map_tile(row: int, col: int, tile_info):
 	new_tile.angel = currentTileRotate
 	new_tile.is_set = true
 	
+	mapIndex.append(index)
+	
 	grid_container.remove_child(empty_tile)
 	empty_tile.queue_free()
 
@@ -140,12 +137,28 @@ func set_first_map_tile(row: int, col: int, tile_info):
 func _on_tile_ready(row, col, node):
 	fill_block_in_matrix(row, col, node.get_top_level_matrix())
 	
-	var zones = find_zones_2()
-	print("ZONE MAP\n")
+	var zone = find_zones_2()
+	var finds_zone = finding_complete_buildings(zone)
+	
+	print("----")
+	print("FIND MAP")
 	print("------")
-	print(zones)
+	print(finds_zone)
 	print("-----")
-	print(finding_complete_buildings(zones))
+	
+	if mapFindZonesSize != finds_zone.size():
+		Player.increase_score(20)
+		mapFindZonesSize = finds_zone.size()
+	
+	#if finds_zone.size() > 0:
+		#for zone in finds_zone:
+			#remove_index_by_key_value(mapZone, "Index", zone["Index"])
+	
+	print("----")
+	print("ZONE MAP")
+	print("------")
+	print(zone)
+	print("-----")
 
 func skip_meeple_set() -> void:
 	Player.update_current_state(Player.STATE.CHOOSE_TILE)
@@ -191,7 +204,8 @@ func find_zones_2():
 							zone_type = "Build_corner"
 					var dict = {
 						"Zone type": zone_type,
-						"Zones": zone
+						"Zones": zone,
+						#"Index": mapIndex[-1],
 					}
 					if zone_type != "Deadend" && zone_type != "Build_corner":
 						zones.append(dict)
@@ -200,6 +214,12 @@ func find_zones_2():
 func flood_fill(start, target_type, visited):
 	var stack = [start]
 	var zone = []
+	var directions = [
+		Vector2(1, 0),  # вправо
+		Vector2(-1, 0), # влево
+		Vector2(0, 1),  # вниз
+		Vector2(0, -1)  # вверх
+	]
 	
 	while stack.size() > 0:
 		var current = stack.pop_back()
@@ -212,12 +232,6 @@ func flood_fill(start, target_type, visited):
 			continue
 		
 		var has_adjacent_one = false
-		var directions = [
-			Vector2(1, 0),  # вправо
-			Vector2(-1, 0), # влево
-			Vector2(0, 1),  # вниз
-			Vector2(0, -1)  # вверх
-		]
 		for dir in directions_x8:
 			var nx = x + dir.x
 			var ny = y + dir.y
@@ -251,15 +265,14 @@ func is_wall_closed(x, y):
 		
 		var neignbor_value = dfsGlobalMapMatrix[ny][nx] 
 		
-		if neignbor_value == 1:
-			continue
-		
-		if neignbor_value == 5:
+		if neignbor_value == 5 || neignbor_value == 1:
 			wall_found = true
 		elif neignbor_value != 1:
 			open_side_found = true
 	
-	return wall_found && !open_side_found
+	if open_side_found || !wall_found:
+		return false
+	return true
 
 #func find_zones_map():
 	#var state_enum = resource_tiles.TYPES
@@ -423,6 +436,11 @@ func fill_block_in_matrix(i, j, block):
 		for y in range(BLOCK_SIZE):
 			dfsGlobalMapMatrix[start_x + x][start_y + y] = block[x][y]
 
+func remove_index_by_key_value(array, key, value):
+	for i in range(array.size()):
+		if array[i].has(key) && array[i][key] == value:
+			array.remove_at(i)
+			break
 #func find_zones():
 	#var visited = []
 	#for i in range(MATRIX_SIZE_X2):
