@@ -21,7 +21,10 @@ var mapTiles = []
 var dfsMapMatrix = []
 var dfsGlobalMapMatrix = []
 var mapIndex = []
-var mapFindZonesSize = 0
+var mapFindZonesSize = {
+	"Build": 0,
+	"Road": 0,
+}
 var mapHoverTiles
 var currentTileInfo
 var currentTileRotate = 0.0
@@ -138,17 +141,27 @@ func _on_tile_ready(row, col, node):
 	fill_block_in_matrix(row, col, node.get_top_level_matrix())
 	
 	var zone = find_zones_2()
-	var finds_zone = finding_complete_buildings(zone)
+	var finds_zone_build = finding_complete_buildings(zone)
+	var finds_zone_road = finding_complete_roads(zone)
 	
 	print("----")
-	print("FIND MAP")
+	print("FIND ZONE BUILD")
 	print("------")
-	print(finds_zone)
-	print("-----")
+	print(finds_zone_build)
 	
-	if mapFindZonesSize != finds_zone.size():
+	print("----")
+	print("FIND ZONE ROAD")
+	print("------")
+	print(finds_zone_road)
+	
+	if mapFindZonesSize["Build"] != finds_zone_build.size():
 		Player.increase_score(20)
-		mapFindZonesSize = finds_zone.size()
+		mapFindZonesSize["Build"] = finds_zone_build.size()
+	
+	#if finds_zone_road.size() != 0:
+	if mapFindZonesSize["Road"] != finds_zone_road.size():
+		Player.increase_score(10)
+		mapFindZonesSize["Road"] = finds_zone_road.size()
 	
 	#if finds_zone.size() > 0:
 		#for zone in finds_zone:
@@ -207,7 +220,7 @@ func find_zones_2():
 						"Zones": zone,
 						#"Index": mapIndex[-1],
 					}
-					if zone_type != "Deadend" && zone_type != "Build_corner":
+					if zone_type != "Build_corner":
 						zones.append(dict)
 	return zones
 
@@ -232,15 +245,27 @@ func flood_fill(start, target_type, visited):
 			continue
 		
 		var has_adjacent_one = false
-		for dir in directions_x8:
+		#var has_road = false
+		for dir in directions:
 			var nx = x + dir.x
 			var ny = y + dir.y
 			if nx >= 0 && ny >= 0 && nx < MATRIX_SIZE_X2 && ny < MATRIX_SIZE_X2:
 				if dfsGlobalMapMatrix[ny][nx] == 1:
 					has_adjacent_one = true
 					break
+				if dfsGlobalMapMatrix[ny][nx] == 2:
+					has_adjacent_one = true
+					break
 		
-		if !has_adjacent_one && target_type != 1:
+		#for dir in directions:
+			#var nx = x + dir.x
+			#var ny = y + dir.y
+			#if nx >= 0 && ny >= 0 && nx < MATRIX_SIZE_X2 && ny < MATRIX_SIZE_X2:
+				#if dfsGlobalMapMatrix[ny][nx] == 2:
+					#has_road = true
+					#break
+		
+		if !has_adjacent_one && target_type != 1 && target_type != 2:
 			continue
 		
 		visited[y][x] = true
@@ -399,6 +424,22 @@ func is_wall_closed(x, y):
 			#break
 	#return valid
 
+func is_road_closed(x, y):
+	var angle_find = false
+	
+	for dir in directions:
+		var nx = x + dir.x
+		var ny = y + dir.y
+		if nx < 0 || nx >= MATRIX_SIZE_X2 || ny < 0 || ny >= MATRIX_SIZE_X2:
+			continue
+		
+		var neignbor_value = dfsGlobalMapMatrix[ny][nx] 
+		
+		if neignbor_value == 3:
+			angle_find = true
+			
+	return angle_find
+
 func finding_complete_buildings(zone_data):
 	var complete_bulildings = []
 	for zone in zone_data:
@@ -418,6 +459,27 @@ func finding_complete_buildings(zone_data):
 				complete_bulildings.append(zone)
 	return complete_bulildings
 
+func finding_complete_roads(zone_data):
+	var complete = []
+	var founds_angle = 0
+	for zone in zone_data:
+		if zone["Zone type"] == "Road" && "Zones" in zone:
+			var building_zone = zone["Zones"]
+			
+			for coord in building_zone:
+				var x = coord[0]
+				var y = coord[1]
+				
+				if is_road_closed(x, y):
+					print("found")
+					founds_angle += 1
+			
+			if founds_angle == 2:
+				complete.append(zone)
+			
+			founds_angle = 0
+			
+	return complete
 #func print_zones(zones):
 	#for zone in zones:
 		#print("Zone:")
