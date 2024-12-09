@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://p3xxbv6ud05s"]
+[gd_scene load_steps=5 format=3 uid="uid://p3xxbv6ud05s"]
 
 [ext_resource type="PackedScene" uid="uid://cp7qsa6fgwq4h" path="res://components/ui/tile_deck.tscn" id="1_22nnm"]
 [ext_resource type="PackedScene" uid="uid://c65wmnhkfqu7k" path="res://components/ui/advice.tscn" id="1_g1k5e"]
+[ext_resource type="PackedScene" uid="uid://b0feldryc1xyc" path="res://components/ui/score.tscn" id="1_jdgo4"]
 [ext_resource type="PackedScene" uid="uid://dbwh8a6t2pm5b" path="res://components/ui/meeple_grid.tscn" id="2_amtq0"]
 
 [node name="Player" type="Control"]
@@ -12,6 +13,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="UI_TOP" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="UI" type="Control" parent="."]
 z_index = 100
@@ -34,6 +45,18 @@ anchor_top = 1.0
 anchor_right = 0.5
 offset_top = -120.0
 offset_bottom = -120.0
+grow_vertical = 0
+
+[node name="Score" parent="UI" instance=ExtResource("1_jdgo4")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+offset_left = -48.0
+offset_top = -136.0
+offset_right = -48.0
+offset_bottom = -136.0
+grow_horizontal = 0
 grow_vertical = 0
 
 [node name="TileDeck" parent="UI" instance=ExtResource("1_22nnm")]

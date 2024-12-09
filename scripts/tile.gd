@@ -1,8 +1,14 @@
 extends Control
 
+class_name Tile
+
 @export var tile_info: Dictionary
 @export var is_set: bool
 @export var angel: float = 0.0
+@export var is_top_open: bool = false
+@export var is_left_open: bool = false
+@export var is_bottom_open: bool = false
+@export var is_right_open: bool = false
 
 @onready var tile_sprite = $Tile_img
 @onready var meeple_grid = $MeepleGrid
@@ -50,38 +56,38 @@ func getTopSide() -> Array:
 		matrix_top_level[0][0], 
 		matrix_top_level[0][1],
 		matrix_top_level[0][2],
+		matrix_top_level[0][3],
+		matrix_top_level[0][4],
 	]
 	return array
 
 func getLeftSide() -> Array:
-	var array = [
-		matrix_top_level[0][0], 
-		matrix_top_level[1][0],
-		matrix_top_level[2][0],
-	]
-	return array
+	var result = []
+	for i in range(matrix_top_level.size()):
+		result.append(matrix_top_level[i][0])
+	return result
 
 func getBottomSide() -> Array:
 	var array = [
-		matrix_top_level[2][0], 
-		matrix_top_level[2][1],
-		matrix_top_level[2][2],
+		matrix_top_level[4][0], 
+		matrix_top_level[4][1],
+		matrix_top_level[4][2],
+		matrix_top_level[4][3],
+		matrix_top_level[4][4],
 	]
 	return array
 
 func getRightSide() -> Array:
-	var array = [
-		matrix_top_level[0][2], 
-		matrix_top_level[1][2],
-		matrix_top_level[2][2],
-	]
-	return array
+	var result = []
+	for i in range(matrix_top_level.size()):
+		result.append(matrix_top_level[i][-1])
+	return result
 
 func rotate_clockwise() -> void:
 	var rotated = []
-	for col in range(3):
+	for col in range(5):
 		var new_row = []
-		for row in range(2, -1, -1):
+		for row in range(4, -1, -1):
 			new_row.append(matrix_top_level[row][col])
 		rotated.append(new_row)
 	matrix_top_level = rotated
@@ -180,9 +186,9 @@ func rotate_down_level_dictionary_keys_counterclockwise() -> void:
 
 func rotate_counterclockwise() -> void:
 	var rotated = []
-	for col in range(2, -1, -1):
+	for col in range(4, -1, -1):
 		var new_row = []
-		for row in range(3):
+		for row in range(5):
 			new_row.append(matrix_top_level[row][col])
 		rotated.append(new_row)
 	matrix_top_level = rotated
@@ -246,13 +252,13 @@ func modulate_tween_meeple(panel: Panel, color: Color) -> void:
 func find_zones():
 	var debug = []
 	var visited = []
-	for y in range(3):
+	for y in range(5):
 		visited.append([])
-		for x in range(3):
+		for x in range(5):
 			visited[y].append(false)
 	
-	for y in range(3):
-		for x in range(3):
+	for y in range(5):
+		for x in range(5):
 			if !visited[y][x]:
 				var zone = flood_fill(Vector2(x, y), matrix_top_level[y][x], visited)
 				if zone.size() > 0:
@@ -266,13 +272,16 @@ func find_zones():
 							zone_type = "Road"
 						3:
 							zone_type = "Deadend"
+						5:
+							zone_type = "Build_corner"
 					var dict = {
 						"Zone type": zone_type,
 						"Zones": zone
 					}
-					if zone_type != "Deadend":
+					if zone_type != "Deadend" && zone_type != "Build_corner":
 						zones.append(dict)
-	print("Zones finds ", zones)
+	if !is_set && Debug.ISDEBUG:
+		print("Zones finds ", zones)
 
 func flood_fill(start, target_type, visited):
 	var stack = [start]
@@ -283,7 +292,7 @@ func flood_fill(start, target_type, visited):
 		var x = current.x
 		var y = current.y
 		
-		if x < 0 || y < 0 || x >= 3 || y >= 3:
+		if x < 0 || y < 0 || x >= 5 || y >= 5:
 			continue
 		if visited[y][x] || matrix_top_level[y][x] != target_type:
 			continue
@@ -316,16 +325,16 @@ func get_array_center(points: Array) -> Vector2:
 	return points[center_index]
 
 func _on_tile_set():
-	if Debug.ISDEBUG:
-		Debug.print_debug_matrix(matrix_top_level)
 	if !is_set:
+		if Debug.ISDEBUG:
+			Debug.print_debug_matrix(matrix_top_level)
 		find_zones()
 		var meeple_center = []
 		for zone in zones:
 			meeple_center.append(get_array_center(zone["Zones"]))
 		
 		for meeple in meeple_center:
-			var index = meeple.y * meeple_grid.columns + meeple.x
+			var index = (meeple.y - 2) * meeple_grid.columns + (meeple.x - 2)
 			set_avaliable_grid_meeple(index)
 	is_set = true
 
@@ -341,3 +350,6 @@ func _on_meeple_grid_meeple_set() -> void:
 
 func _on_meeple_skip() -> void:
 	emit_signal("meeple_skip")
+
+func get_top_level_matrix() -> Array:
+	return matrix_top_level

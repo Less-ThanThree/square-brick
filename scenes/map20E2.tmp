@@ -30,7 +30,7 @@ move_speed = 700.0
 
 [node name="Player" parent="UI" instance=ExtResource("2_sqwty")]
 
-[node name="TileDeck" parent="UI/Player/UI" index="2"]
+[node name="TileDeck" parent="UI/Player/UI" index="1"]
 z_index = 100
 
 [node name="Map" type="Control" parent="."]

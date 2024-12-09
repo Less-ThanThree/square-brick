@@ -7,6 +7,7 @@ signal tile_mouse_exited
 
 var original_color : Color = Color(1, 1, 1, 1)  # Исходный цвет панели (белый)
 var hover_color : Color = Color(0.5, 0.8, 1, 0)  # Цвет при наведении (светло-синий)
+var avail_color: Color = Color(0, 0.674, 0.2)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -27,3 +28,9 @@ func _on_button_mouse_entered() -> void:
 
 func _on_button_mouse_exited() -> void:
 	self.emit_signal("tile_mouse_exited")
+
+func modulate_avail():
+	self.modulate = avail_color
+
+func modulate_default():
+	self.modulate = original_color

@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnf78x1w5i04b"]
+
+[ext_resource type="Script" path="res://scripts/tile.gd" id="1_yw7og"]
+[ext_resource type="Script" path="res://scripts/meeple_grid.gd" id="2_wvxkg"]
+
+[node name="Tile" type="Control"]
+clip_contents = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 128)
+script = ExtResource("1_yw7og")
+metadata/_edit_use_anchors_ = true
+
+[node name="Tile_img" type="TextureRect" parent="."]
+texture_filter = 1
+clip_contents = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 128)
+expand_mode = 2
+
+[node name="MeepleGrid" type="GridContainer" parent="."]
+clip_contents = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -131.5
+offset_top = -131.5
+offset_right = 131.5
+offset_bottom = 131.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+columns = 3
+script = ExtResource("2_wvxkg")
+
+[connection signal="meeple_skip" from="." to="MeepleGrid" method="_on_tile_meeple_skip"]
+[connection signal="meeple_set" from="MeepleGrid" to="." method="_on_meeple_grid_meeple_set"]

@@ -43,3 +43,12 @@ func get_base_tile_array() -> Array:
 			tile_base_array.append(tile_resourse.tile_info[brick])
 	print(tile_base_array)
 	return tile_base_array
+
+func get_base_tile_array_x5() -> Array:
+	var deck_base = tile_resourse.test_stack_x5
+	var tile_base_array = []
+	for brick in deck_base:
+		for i in range(deck_base[brick] + 1):
+			tile_base_array.append(tile_resourse.tile_info_x5[brick])
+	print(tile_base_array)
+	return tile_base_array
