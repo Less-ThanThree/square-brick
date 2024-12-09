@@ -21,6 +21,8 @@ var mapTiles = []
 var dfsMapMatrix = []
 var dfsGlobalMapMatrix = []
 var mapIndex = []
+var mapCorner = []
+var availCorner = []
 var mapFindZonesSize = {
 	"Build": 0,
 	"Road": 0,
@@ -115,6 +117,8 @@ func set_tile_map(row: int, col: int, tile_info):
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
 	
+	get_available_corners(row, col, index)
+	
 	currentTileRotate = 0.0
 
 func set_first_map_tile(row: int, col: int, tile_info):
@@ -122,20 +126,20 @@ func set_first_map_tile(row: int, col: int, tile_info):
 	var new_tile = GameTileScene.instantiate()
 	var empty_tile = grid_container.get_child(index)
 	tile_set.connect(new_tile._on_tile_set)
-	#meeple_skip.connect(new_tile._on_meeple_skip)
-	#new_tile.connect("meeple_set", _on_meeple_set)
 	new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
+	meeple_skip.connect(new_tile._on_meeple_skip)
 	new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
 	new_tile.angel = currentTileRotate
 	new_tile.is_set = true
-	
-	mapIndex.append(index)
 	
 	grid_container.remove_child(empty_tile)
 	empty_tile.queue_free()
 
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
+	
+	get_available_corners(row, col, index)
+	skip_meeple_set()
 
 func _on_tile_ready(row, col, node):
 	fill_block_in_matrix(row, col, node.get_top_level_matrix())
@@ -158,7 +162,6 @@ func _on_tile_ready(row, col, node):
 		Player.increase_score(20)
 		mapFindZonesSize["Build"] = finds_zone_build.size()
 	
-	#if finds_zone_road.size() != 0:
 	if mapFindZonesSize["Road"] != finds_zone_road.size():
 		Player.increase_score(10)
 		mapFindZonesSize["Road"] = finds_zone_road.size()
@@ -180,6 +183,7 @@ func skip_meeple_set() -> void:
 
 func _on_map_2_test_new_tile(info) -> void:
 	currentTileInfo = info
+	get_avalable_set_tile()
 
 func _on_map_hover_tiles_is_tile_rotate(angle) -> void:
 	currentTileRotate = angle
@@ -245,7 +249,6 @@ func flood_fill(start, target_type, visited):
 			continue
 		
 		var has_adjacent_one = false
-		#var has_road = false
 		for dir in directions:
 			var nx = x + dir.x
 			var ny = y + dir.y
@@ -256,14 +259,6 @@ func flood_fill(start, target_type, visited):
 				if dfsGlobalMapMatrix[ny][nx] == 2:
 					has_adjacent_one = true
 					break
-		
-		#for dir in directions:
-			#var nx = x + dir.x
-			#var ny = y + dir.y
-			#if nx >= 0 && ny >= 0 && nx < MATRIX_SIZE_X2 && ny < MATRIX_SIZE_X2:
-				#if dfsGlobalMapMatrix[ny][nx] == 2:
-					#has_road = true
-					#break
 		
 		if !has_adjacent_one && target_type != 1 && target_type != 2:
 			continue
@@ -298,131 +293,6 @@ func is_wall_closed(x, y):
 	if open_side_found || !wall_found:
 		return false
 	return true
-
-#func find_zones_map():
-	#var state_enum = resource_tiles.TYPES
-	#
-	#print(dfsMapMatrix)
-	#
-	#var field_zone = find_connected_zones(state_enum.FIELD)
-	#print("Field zones:")
-	##print(field_zone)
-	#
-	#var build_zones = find_connected_zones(state_enum.BUILD)
-	#print("City zones:")
-	##print(build_zones)
-	#for zone in build_zones:
-		#find_builds_zone(zone)
-	##print(find_builds_zone(build_zones))
-	##print(build_zones)
-	#
-	#var road_zones = find_connected_zones(state_enum.ROAD)
-	#print("Road zones:")
-	#print(road_zones)
-	#Debug.print_debug_matrix(road_zones)
-	
-	#print(dfsMapMatrix)
-
-#func find_builds_zone(zone):
-	#var valid_zone = true
-	#for pos in zone:
-		#if !check_building(pos.x, pos.y):
-			#valid_zone = false
-			#break
-	#if valid_zone:
-		#print("Valid zone")
-		#for pos in zone:
-			#print("Pos", pos)
-	##for zone in zones:
-		##for pos in zone:
-			##if !check_building(pos.x, pos.y):
-				##print("Invalide zone building at", pos)
-
-# Проверяем тип
-#func is_of_type(x, y, target_type):
-	#if x < 0 || x >= MATRIX_SIZE || y < 0 || y >= MATRIX_SIZE:
-		#return false
-	#var block = dfsMapMatrix[x][y]
-	#if block.size() == 0:
-		#return false
-	#
-	#for row in block:
-		#for val in row:
-			#if val == target_type:
-				#return true
-	#return false
-#
-#func is_type_submatrix(x, y, target_type):
-	#var block = dfsMapMatrix[x][y]
-	#if block.size() == 0:
-		#return false
-	#for i in range(3):
-		#for j in range(3):
-			#if block[i][j] == target_type:
-				#return true
-	#return false
-#
-#func find_connected_zones(target_type):
-	#var visited = []
-	#for i in range(MATRIX_SIZE):
-		#var row = []
-		#for j in range(MATRIX_SIZE):
-			#row.append(false)
-		#visited.append(row)
-	#
-	#var zones = []
-	#for i in range(MATRIX_SIZE):
-		#for j in range(MATRIX_SIZE):
-			#if !visited[i][j] && is_type_submatrix(i, j, target_type):
-				#var zone = []
-				#dfs(i, j, target_type, visited, zone)
-				#if zone.size() > 0:
-					#zones.append(zone)
-	#
-	#return zones
-#
-#func dfs(x, y, target_type, visited, zone):
-	#if x < 0 || x >= col || y < 0 || y >= row || visited[x][y] || !is_type_submatrix(x, y, target_type):
-		#return
-	#
-	#visited[x][y] = true
-	#zone.append(Vector2(x, y))
-	#
-	#dfs(x - 1, y, target_type, visited, zone)
-	#dfs(x + 1, y, target_type, visited, zone)
-	#dfs(x, y - 1, target_type, visited, zone)
-	#dfs(x, y + 1, target_type, visited, zone)
-#
-#func block_has_valid_neighbors_build(block):
-	#var state_enum = resource_tiles.TYPES
-	#
-	#for row in block:
-		#for value in row:
-			#if value == state_enum.FIELD || value == state_enum.ROAD || value == state_enum.BUILD_CORNER:
-				#return true
-	#return false
-#
-#func check_building(x, y):
-	#var valid = true
-	#var directions = [
-		#Vector2(-1, 0),
-		#Vector2(1, 0),
-		#Vector2(0, -1),
-		#Vector2(0, 1),
-	#]
-	#
-	#for direction in directions:
-		#var new_x = x + direction.x
-		#var new_y = y + direction.y
-		#if new_x < 0 || new_x >= MATRIX_SIZE || new_y < 0 || new_y >= MATRIX_SIZE:
-			#valid = false
-			#break
-		#
-		#var block = dfsMapMatrix[new_x][new_y]
-		#if block.size() == 0 || !block_has_valid_neighbors_build(block):
-			#valid = false
-			#break
-	#return valid
 
 func is_road_closed(x, y):
 	var angle_find = false
@@ -503,219 +373,165 @@ func remove_index_by_key_value(array, key, value):
 		if array[i].has(key) && array[i][key] == value:
 			array.remove_at(i)
 			break
-#func find_zones():
-	#var visited = []
-	#for i in range(MATRIX_SIZE_X2):
-		#visited.append([])
-		#for j in range(MATRIX_SIZE_X2):
-			#visited[i].append(false)
-	#
-	#var zones = []
-	#
-	#for i in range(MATRIX_SIZE_X2):
-		#for j in range(MATRIX_SIZE_X2):
-			#if visited[i][j] == false && dfsGlobalMapMatrix[i][j] != -1:
-				#var zone = []
-				#var type_of_zone = dfsGlobalMapMatrix[i][j]
-				#dfs_2(i, j, visited, zone, type_of_zone)
-				#if zone.size() > 0:
-					##zones.append(zone)
-					#var zone_type
-					#match type_of_zone:
-						#0:
-							#zone_type = "Field"
-						#1:
-							#zone_type = "Build"
-						#2:
-							#zone_type = "Road"
-						#3:
-							#zone_type = "Deadend"
-						#5:
-							#zone_type = "Build_corner"
-					#var dict = {
-						#"Zone type": zone_type,
-						#"Zones": zone
-					#}
-					#zones.append(dict)
-	#return zones
 
-#func is_edge(x, y):
-	#for dir in directions_x8:
-		#var nx = x + dir.x
-		#var ny = y + dir.y
-		#if nx < 0 || nx > MATRIX_SIZE_X2 || ny < 0 || ny >= MATRIX_SIZE_X2:
-			#return true
-		#if dfsGlobalMapMatrix[nx][ny] != 1 && dfsGlobalMapMatrix[nx][ny] != 5:
-			#return true
-	#return false
+func get_available_corners(row: int, col: int, current_index: int):
+	var index_top = (row - 1) * grid_container.columns + col
+	var index_left = row * grid_container.columns + (col - 1)
+	var index_bottom = (row + 1) * grid_container.columns + col
+	var index_right = row * grid_container.columns + ( col + 1)
+	var current_tile = grid_container.get_child(current_index)
+	
+	var sides = {
+		"index": current_index,
+		"neighbor": {
+			"index_top": 0,
+			"index_left": 0,
+			"index_bottom": 0,
+			"index_right": 0,
+		},
+		"top": [],
+		"left": [],
+		"bottom": [],
+		"right": [],
+	}
+	
+	if grid_container.get_child(index_top) is EmptyMapTile:
+		sides["top"] = current_tile.getTopSide()
+		sides["neighbor"]["index_top"] = index_top
+	if grid_container.get_child(index_left) is EmptyMapTile:
+		sides["left"] = current_tile.getLeftSide()
+		sides["neighbor"]["index_left"] = index_left
+	if grid_container.get_child(index_bottom) is EmptyMapTile:
+		sides["bottom"] = current_tile.getBottomSide()
+		sides["neighbor"]["index_bottom"] = index_bottom
+	if grid_container.get_child(index_right) is EmptyMapTile:
+		sides["right"] = current_tile.getRightSide()
+		sides["neighbor"]["index_right"] = index_right
+	
+	mapCorner.append(sides)
 
-#func is_building_complete(building_zones):
-	#for coord in building_zones:
-		#var x = coord[0]
-		#var y = coord[1]
-		#if is_edge(x, y):
-			#for dir in directions_x8:
-				#var nx = x + dir.x
-				#var ny = y + dir.y
-				#if nx < 0 || nx >= MATRIX_SIZE_X2 || ny < 0 || ny >= MATRIX_SIZE_X2:
-					#return false
-				#var neighbor_value = dfsGlobalMapMatrix[nx][ny]
-				#if neighbor_value != 0 || neighbor_value != 2 || neighbor_value != 5:
-					#return false
-	#return true
+func get_avalable_set_tile():
+	var info_matrix = resource_tiles.tile_info_x5[currentTileInfo]["top_level"]
+	
+	reset_tiles(mapCorner)
+	
+	if Debug.ISDEBUG:
+		print("Current tile top")
+		print(getTopSide(info_matrix))
+		print("Current tile left")
+		print(getLeftSide(info_matrix))
+		print("Current tile bottom")
+		print(getBottomSide(info_matrix))
+		print("Current tile right")
+		print(getRightSide(info_matrix))
+		print(mapCorner)
+	
+	for side in mapCorner:
+		var side_top = side["top"].filter(func(item): return item != 5)
+		var side_left = side["left"].filter(func(item): return item != 5)
+		var side_bottom = side["bottom"].filter(func(item): return item != 5)
+		var side_right = side["right"].filter(func(item): return item != 5)
+		var corner = {
+			"index": side["index"],
+			"sides": {
+				"index_top": null,
+				"index_left": null,
+				"index_bottom": null,
+				"index_right": null,
+			}
+		}
+		
+		#side_top.to_set()
+		#side_left.to_set()
+		#side_bottom.to_set()
+		#side_right.to_set()
+		
+		#if is_compare(1, side_top, getBottomSide(info_matrix)) || is_compare(2, side_top, getBottomSide(info_matrix)) || is_compare(0, side_top, getBottomSide(info_matrix)):
+		if uniq_items(side_top) == getBottomSide(info_matrix):
+			#corner["sides"]["index_top"] = side["neighbor"]["index_top"]
+			set_avail_tile(side["neighbor"]["index_top"])
+			if Debug.ISDEBUG:
+				print("Top Side Check")
+		#if is_compare(1, side_left, getRightSide(info_matrix)) || is_compare(2, side_left, getRightSide(info_matrix)) || is_compare(0, side_left, getRightSide(info_matrix)):
+		if uniq_items(side_left) == getRightSide(info_matrix):
+			#corner["sides"]["index_left"] = side["neighbor"]["index_left"]
+			set_avail_tile(side["neighbor"]["index_left"])
+			if Debug.ISDEBUG:
+				print("Left Side Check")
+		#if is_compare(1, side_bottom, getTopSide(info_matrix)) || is_compare(2, side_bottom,  getTopSide(info_matrix)) || is_compare(0, side_bottom,  getTopSide(info_matrix)):
+		if uniq_items(side_bottom) == getTopSide(info_matrix):
+			#corner["sides"]["index_bottom"] = side["neighbor"]["index_bottom"]
+			set_avail_tile(side["neighbor"]["index_bottom"])
+			if Debug.ISDEBUG:
+				print("Bottom Side Check")
+		#if is_compare(1, side_right, getLeftSide(info_matrix)) || is_compare(2, side_right, getLeftSide(info_matrix)) || is_compare(0, side_right, getLeftSide(info_matrix)):
+		if uniq_items(side_right) == getLeftSide(info_matrix):
+			set_avail_tile(side["neighbor"]["index_right"])
+			#corner["sides"]["index_right"] = side["neighbor"]["index_right"]
+			if Debug.ISDEBUG:
+				print("Right Side Check")
+	
+		availCorner.append(corner)
 
+func getTopSide(matrix_top_level: Array) -> Array:
+	var array = [
+		matrix_top_level[0][0], 
+		matrix_top_level[0][1],
+		matrix_top_level[0][2],
+		matrix_top_level[0][3],
+		matrix_top_level[0][4],
+	]
+	array = array.filter(func(item): return item != 5)
+	return uniq_items(array)
 
-#
-#func dfs(x, y, visited, zone, type_of_zone):
-	#var directions = [
-		#Vector2(0, 1),  # вниз
-		#Vector2(0, -1),  # вверх
-		#Vector2(1, 0),  # вправо
-		#Vector2(-1, 0)   # влево
-	#]	
-	#
-	#if x < 0 || x >= MATRIX_SIZE_X2 || y < 0 || y >= MATRIX_SIZE_X2:
-		#return
-	#if visited[x][y] || dfsGlobalMapMatrix[x][y] != type_of_zone || dfsGlobalMapMatrix[x][y] == -1:
-		#return
-	#
-	#visited[x][y] = true
-	#zone.append(Vector2(x, y))
-	#
-	#for dir in directions:
-		#var nx = x + dir.x
-		#var ny = y + dir.y
-		#dfs(nx, ny, visited, zone, type_of_zone)
-#
-#func dfs_2(x, y, visited, zone, type_of_zone):
-	#var directions = [
-		#Vector2(0, 1),  # вниз
-		#Vector2(0, -1),  # вверх
-		#Vector2(1, 0),  # вправо
-		#Vector2(-1, 0)   # влево
-	#]	
-	#
-	#if x < 0 || x >= MATRIX_SIZE_X2 || y < 0 || y >= MATRIX_SIZE_X2:
-		#return
-	#if visited[x][y]:
-		#return
-	#if dfsGlobalMapMatrix[x][y] != type_of_zone:
-		#return
-	#
-	#var has_adjacent_same_zone = false
-	#for dir in directions:
-		#var nx = x + dir.x
-		#var ny = y + dir.y
-		#if nx >= 0 && nx < MATRIX_SIZE_X2 && ny >= 0 && ny < MATRIX_SIZE_X2:
-			#if dfsGlobalMapMatrix[nx][ny] == 1:
-				#has_adjacent_same_zone = true
-				#break
-	#
-	#if !has_adjacent_same_zone:
-		#return false
-	#
-	#visited[x][y] = true
-	#zone.append(Vector2(x, y))
-	#
-	#for dir in directions:
-		#var nx = x + dir.x
-		#var ny = y + dir.y
-		#dfs_2(nx, ny, visited, zone, type_of_zone)
-#
-#func dfs_build(curr_x, curr_y, visited, zone):	
-	#if curr_x < 0 or curr_x >= MATRIX_SIZE_X2 or curr_y < 0 or curr_y >= MATRIX_SIZE_X2:
-		#return
-	#
-	#if visited.has([curr_x, curr_y]):
-			#return
-	#
-	#visited.append([curr_x, curr_y])
-	#
-	#if dfsGlobalMapMatrix[curr_x][curr_y] != 1:
-		#return
-	#
-	#zone.append([curr_x, curr_y])
-	#
-	#for dir in directions_x8:
-		#var new_x = curr_x + dir.x
-		#var new_y = curr_y + dir.y
-		#dfs_build(new_x, new_y, visited, zone)
-#func find_building_zone(x, y):
-	#var visited = []
-	#var zone = []
-	#var directions = [
-		#Vector2(-1, -1),
-		#Vector2(0, -1), 
-		#Vector2(1, -1),
-		#Vector2(-1, 0), 
-		#Vector2(1, 0),
-		#Vector2(-1, 1), 
-		#Vector2(0, 1), 
-		#Vector2(1, 1)
-		#]
-		#
-	#var dfs_bus = func(curr_x, curr_y):
-		#if curr_x < 0 || curr_x >= MATRIX_SIZE_X2 || curr_y < 0 || curr_y >= MATRIX_SIZE_X2:
-			#return
-		#
-		#if visited.has([curr_x, curr_y]):
-			#return
-		#
-		#visited.append([curr_x, curr_y])
-		#
-		#if dfsGlobalMapMatrix[curr_x][curr_y] != 1:
-			#return
-		#
-		#zone.append([curr_x, curr_y])
-		#
-		#for dir in directions:
-			#var new_x = curr_x + dir.x
-			#var new_y = curr_y + dir.y
-			#dfs_bus.call(new_x, new_y)
-	#
-	#dfs_bus(x, y)
-	#
-	#for cell in zone:
-		#var cx = cell[0]
-		#var cy = cell[1]
-		#
-		#var is_valid = true
-		#for dir in directions:
-			#var new_x = cx + dir.x
-			#var new_y = cy + dir.y
-			#
-			#if new_x < 0 || new_x >= MATRIX_SIZE_X2 || new_y < 0 || new_y >= MATRIX_SIZE_X2:
-				#continue
-		#
-			#var neighbor_value = dfsGlobalMapMatrix[new_x][new_y]
+func getLeftSide(matrix: Array) -> Array:
+	var result = []
+	for i in range(matrix.size()):
+		result.append(matrix[i][0])
+	result = result.filter(func(item): return item != 5)
+	return uniq_items(result)
 
-#func find_building_zone(x, y):
-	#var visited = []
-	#var zone = []
-	#
-	#dfs_build(x, y, visited, zone)
-	#
-	#for cell in zone:
-		#var cx = cell[0]
-		#var cy = cell[1]
-		#
-		#var is_valid = true
-		#for dir in directions:
-			#var new_x = cx + dir.x
-			#var new_y = cy + dir.y
-			#
-			#if new_x < 0 or new_x >= MATRIX_SIZE_X2 or new_y < 0 or new_y >= MATRIX_SIZE_X2:
-				#continue
-			#
-			#var neighbor_value = dfsGlobalMapMatrix[new_x][new_y]
-			#if neighbor_value == -1:
-				#is_valid = false
-				#break
-			#if neighbor_value != 0 && neighbor_value != 2 && neighbor_value != 5:
-				#is_valid = false
-				#break
-		#
-		#if !is_valid:
-			#zone.erase(cell)
-	#
-	#return zone
+func getBottomSide(matrix_top_level: Array) -> Array:
+	var array = [
+		matrix_top_level[4][0], 
+		matrix_top_level[4][1],
+		matrix_top_level[4][2],
+		matrix_top_level[4][3],
+		matrix_top_level[4][4],
+	]
+	array = array.filter(func(item): return item != 5)
+	return uniq_items(array)
+
+func getRightSide(matrix: Array) -> Array:
+	var result = []
+	for i in range(matrix.size()):
+		result.append(matrix[i][-1])
+	result = result.filter(func(item): return item != 5)
+	return uniq_items(result)
+
+func set_avail_tile(index):
+	var current_tile = grid_container.get_child(index)
+	if current_tile is EmptyMapTile:
+		current_tile.modulate_avail()
+
+func set_tile_default(index):
+	var current_tile = grid_container.get_child(index)
+	if current_tile is EmptyMapTile:
+		current_tile.modulate_default()
+
+func reset_tiles(info: Array):
+	for neighbor in info:
+		for index in neighbor["neighbor"]:
+			set_tile_default(neighbor["neighbor"][index])
+
+func is_compare(val: int, array_1: Array, array_2: Array) -> bool:
+	if array_1.has(val) && array_2.has(val):
+		return true
+	return false
+
+func uniq_items(array) -> Array:
+	var unique_array = []
+	for item in array:
+		if not unique_array.has(item):  # Проверяем, есть ли уже этот элемент в новом массиве
+			unique_array.append(item)
+	return unique_array

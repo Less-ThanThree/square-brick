@@ -1,8 +1,14 @@
 extends Control
 
+class_name Tile
+
 @export var tile_info: Dictionary
 @export var is_set: bool
 @export var angel: float = 0.0
+@export var is_top_open: bool = false
+@export var is_left_open: bool = false
+@export var is_bottom_open: bool = false
+@export var is_right_open: bool = false
 
 @onready var tile_sprite = $Tile_img
 @onready var meeple_grid = $MeepleGrid
@@ -50,32 +56,32 @@ func getTopSide() -> Array:
 		matrix_top_level[0][0], 
 		matrix_top_level[0][1],
 		matrix_top_level[0][2],
+		matrix_top_level[0][3],
+		matrix_top_level[0][4],
 	]
 	return array
 
 func getLeftSide() -> Array:
-	var array = [
-		matrix_top_level[0][0], 
-		matrix_top_level[1][0],
-		matrix_top_level[2][0],
-	]
-	return array
+	var result = []
+	for i in range(matrix_top_level.size()):
+		result.append(matrix_top_level[i][0])
+	return result
 
 func getBottomSide() -> Array:
 	var array = [
-		matrix_top_level[2][0], 
-		matrix_top_level[2][1],
-		matrix_top_level[2][2],
+		matrix_top_level[4][0], 
+		matrix_top_level[4][1],
+		matrix_top_level[4][2],
+		matrix_top_level[4][3],
+		matrix_top_level[4][4],
 	]
 	return array
 
 func getRightSide() -> Array:
-	var array = [
-		matrix_top_level[0][2], 
-		matrix_top_level[1][2],
-		matrix_top_level[2][2],
-	]
-	return array
+	var result = []
+	for i in range(matrix_top_level.size()):
+		result.append(matrix_top_level[i][-1])
+	return result
 
 func rotate_clockwise() -> void:
 	var rotated = []

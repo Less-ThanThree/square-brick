@@ -8,6 +8,7 @@ signal meeple_set
 
 var hovered_color = Color(1, 1, 1, 1)
 var default_color = Color(1, 1, 1, 0)
+var avail_color = Color(0.264, 0.747, 0.191, 1)
 var disabled = false
 
 func _on_mouse_entered() -> void:
