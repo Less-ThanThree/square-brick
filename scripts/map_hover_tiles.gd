@@ -38,6 +38,7 @@ func _on_map_grid_tile_hovered(row, col, tile_info) -> void:
 		new_tile.connect("is_rotate", _on_update_rotate_tile)
 		new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
 		new_tile.angel = currentTileRotateAngle
+		print(currentTileRotateAngle)
 		
 		grid_container.remove_child(empty_tile)
 		empty_tile.queue_free()
@@ -46,7 +47,7 @@ func _on_map_grid_tile_hovered(row, col, tile_info) -> void:
 		grid_container.move_child(new_tile, index)
 		
 		if (Debug.ISDEBUG):
-			print("Hover to Row: %s Col: %s \n Current tile info: %s" % [row, col, tile_info])
+			print("Hover to Row: %s Col: %s \n Current tile info: %s \n Currner degress %s" % [row, col, tile_info, currentTileRotateAngle])
 
 func _on_map_grid_tile_exited(row, col) -> void:
 	if !isCurrentMeepleChoose:
@@ -59,12 +60,16 @@ func _on_map_grid_tile_exited(row, col) -> void:
 		
 		grid_container.add_child(new_tile)
 		grid_container.move_child(new_tile, index)
+		
+		#print(currentTileRotateAngle)
 
-func _on_update_rotate_tile(angle: float):
-	currentTileRotateAngle = angle
-	emit_signal("is_tile_rotate", angle)
+func _on_update_rotate_tile():
+	currentTileRotateAngle = currentTileRotateAngle + (-90)
+	if currentTileRotateAngle <= -360:
+		currentTileRotateAngle = 0
+	emit_signal("is_tile_rotate", currentTileRotateAngle)
 	if (Debug.ISDEBUG):
-		print("rotated %s" % [angle])
+		print("rotated %s" % [currentTileRotateAngle])
 
 func _on_map_grid_tile_set() -> void:
 	currentTileRotateAngle = 0.0

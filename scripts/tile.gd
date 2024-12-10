@@ -213,15 +213,17 @@ func rotate_transform_clockwise() -> void:
 func rotate_transform_counterclockwise() -> void:
 	var tween = create_tween()
 	var target_rot = tile_sprite.rotation_degrees - 90
-	local_angle = local_angle - 90
-	if local_angle <= -360:
-		local_angle = 0
+	#local_angle = local_angle - 90
+	#print("Print LOCALE ANGLE: %s" %  [local_angle])
+	#if local_angle <= -360:
+		#local_angle = 0
 	is_rotated = true
 	
 	tween.tween_property(tile_sprite, "rotation_degrees", target_rot, 0.15)
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.play()
-	tween.finished.connect(_on_finish_rotate)
+	_on_finish_rotate()
+	#tween.finished.connect(_on_finish_rotate)
 
 func rotate_grid_meeple():
 	var children = meeple_grid.get_children()
@@ -239,7 +241,8 @@ func rotate_grid_meeple():
 		meeple_grid.add_child(child)
 
 func _on_finish_rotate() -> void:
-	emit_signal("is_rotate", local_angle)
+	#emit_signal("is_rotate", local_angle)
+	emit_signal("is_rotate")
 	is_rotated = false
 
 func modulate_tween_meeple(panel: Panel, color: Color) -> void:
