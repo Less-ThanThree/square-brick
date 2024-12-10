@@ -27,6 +27,7 @@ var mapFindZonesSize = {
 	"Build": 0,
 	"Road": 0,
 }
+var currentTileMatrix
 var mapHoverTiles
 var currentTileInfo
 var currentTileRotate = 0.0
@@ -187,6 +188,7 @@ func _on_map_2_test_new_tile(info) -> void:
 
 func _on_map_hover_tiles_is_tile_rotate(angle) -> void:
 	currentTileRotate = angle
+	get_avalable_set_tile()
 
 func _on_meeple_set():
 	Player.decrease_meeple(1)
@@ -411,7 +413,22 @@ func get_available_corners(row: int, col: int, current_index: int):
 	mapCorner.append(sides)
 
 func get_avalable_set_tile():
-	var info_matrix = resource_tiles.tile_info_x5[currentTileInfo]["top_level"]
+	var info_matrix
+	
+	if currentTileRotate == 0:
+		info_matrix = resource_tiles.tile_info_x5[currentTileInfo]["top_level"]
+	if currentTileRotate == -90:
+		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
+	if currentTileRotate == -180:
+		#for i in range(2):
+			#print("rotate")
+		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
+		info_matrix = rotate_counterclockwise(info_matrix)
+	if currentTileRotate == -270:
+		#for i in range(3):
+		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
+		info_matrix = rotate_counterclockwise(info_matrix)
+		info_matrix = rotate_counterclockwise(info_matrix)
 	
 	reset_tiles(mapCorner)
 	
@@ -534,4 +551,14 @@ func uniq_items(array) -> Array:
 	for item in array:
 		if not unique_array.has(item):  # Проверяем, есть ли уже этот элемент в новом массиве
 			unique_array.append(item)
+	unique_array.sort()
 	return unique_array
+
+func rotate_counterclockwise(matrix):
+	var rotated = []
+	for col in range(4, -1, -1):
+		var new_row = []
+		for row in range(5):
+			new_row.append(matrix[row][col])
+		rotated.append(new_row)
+	return rotated
