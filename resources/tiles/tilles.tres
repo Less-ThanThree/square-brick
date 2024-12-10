@@ -1134,14 +1134,19 @@ var tile_info = {
 var tile_info_x5 = {
 	\"brick_1\": {
 		\"top_level\": [
-			[0, 0, 5, 5, 5],
-			[0, 0, 5, 1, 1],
-			[5, 5, 5, 1, 1],
-			[5, 1, 1, 5, 1],
-			[5, 1, 1, 1, 5],
+			#[0, 0, 5, 5, 5],
+			#[0, 0, 5, 1, 1],
+			#[5, 5, 5, 1, 1],
+			#[5, 1, 1, 5, 1],
+			#[5, 1, 1, 1, 5],
+			[5, 5, 0, 0, 0],
+			[1, 5, 0, 0, 0],
+			[1, 5, 0, 0, 0],
+			[1, 5, 5, 5, 5],
+			[5, 1, 1, 1, 5]
 		],
 		\"name\": \"brick_1\",
-		\"tile_src\": load(\"res://tiles/tile_1_walls.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL1.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -1199,7 +1204,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 5, 5],
 		],
 		\"name\": \"brick_2\",
-		\"tile_src\": load(\"res://tiles/tile_2_walls.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL2.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 0, 0],
@@ -1257,7 +1262,7 @@ var tile_info_x5 = {
 			[0, 0, 0, 0, 0],
 		],
 		\"name\": \"brick_3\",
-		\"tile_src\": load(\"res://tiles/tile_3_walls.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL3.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1315,7 +1320,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 5, 5],
 		],
 		\"name\": \"brick_4\",
-		\"tile_src\": load(\"res://tiles/tile_4_wall_and_road.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL4.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -1373,7 +1378,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_5\",
-		\"tile_src\": load(\"res://tiles/tile_5_wall_and_road.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL5.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1431,7 +1436,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 5, 5]
 		],
 		\"name\": \"brick_6\",
-		\"tile_src\": load(\"res://tiles/tile_6_big_build.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL6.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1489,7 +1494,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 5, 5],
 		],
 		\"name\": \"brick_7\",
-		\"tile_src\": load(\"res://tiles/tile_7_build_two_sides.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL7.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1547,7 +1552,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_8\",
-		\"tile_src\": load(\"res://tiles/tile_8_roads_and_build.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL8.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1605,7 +1610,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_9\",
-		\"tile_src\": load(\"res://tiles/tile_9_road_and_build.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL9.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1663,7 +1668,7 @@ var tile_info_x5 = {
 			[5, 0, 2, 0, 5]
 		],
 		\"name\": \"brick_10\",
-		\"tile_src\": load(\"res://tiles/tile_10_big_build_and_road.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL10.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1724,7 +1729,7 @@ var tile_info_x5 = {
 			[5, 1, 1, 1, 5],
 		],
 		\"name\": \"brick_11\",
-		\"tile_src\": load(\"res://tiles/tile_11_only_build.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL11.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1782,7 +1787,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_12\",
-		\"tile_src\": load(\"res://tiles/tile_12_crossroad.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL12.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -1840,7 +1845,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_13\",
-		\"tile_src\": load(\"res://tiles/tile_13_road.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL13.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -1901,7 +1906,7 @@ var tile_info_x5 = {
 			[5, 5, 2, 0, 0],
 		],
 		\"name\": \"brick_14\",
-		\"tile_src\": load(\"res://tiles/tile_14_build_and_road.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL14.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -1959,7 +1964,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 0, 0],
 		],
 		\"name\": \"brick_15\",
-		\"tile_src\": load(\"res://tiles/tile_15_build.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL15.png\"),
 		\"down_level\": {
 			\"1\": [
 				[1, 1, 1],
@@ -2017,7 +2022,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_16\",
-		\"tile_src\": load(\"res://tiles/tile_16_road.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL16.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -2075,7 +2080,7 @@ var tile_info_x5 = {
 			[0, 0, 0, 0, 0],
 		],
 		\"name\": \"brick_17\",
-		\"tile_src\": load(\"res://tiles/tile_17_church.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL17.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -2133,7 +2138,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_18\",
-		\"tile_src\": load(\"res://tiles/tile_18_road_and_church.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL18.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
@@ -2191,7 +2196,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_19\",
-		\"tile_src\": load(\"res://tiles/tile_19_crossroad.webp\"),
+		\"tile_src\": load(\"res://tiles/space/TIL19.png\"),
 		\"down_level\": {
 			\"1\": [
 				[0, 0, 0],
