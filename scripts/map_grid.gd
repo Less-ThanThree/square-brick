@@ -420,12 +420,9 @@ func get_avalable_set_tile():
 	if currentTileRotate == -90:
 		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
 	if currentTileRotate == -180:
-		#for i in range(2):
-			#print("rotate")
 		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
 		info_matrix = rotate_counterclockwise(info_matrix)
 	if currentTileRotate == -270:
-		#for i in range(3):
 		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
 		info_matrix = rotate_counterclockwise(info_matrix)
 		info_matrix = rotate_counterclockwise(info_matrix)
@@ -458,33 +455,20 @@ func get_avalable_set_tile():
 			}
 		}
 		
-		#side_top.to_set()
-		#side_left.to_set()
-		#side_bottom.to_set()
-		#side_right.to_set()
-		
-		#if is_compare(1, side_top, getBottomSide(info_matrix)) || is_compare(2, side_top, getBottomSide(info_matrix)) || is_compare(0, side_top, getBottomSide(info_matrix)):
 		if uniq_items(side_top) == getBottomSide(info_matrix):
-			#corner["sides"]["index_top"] = side["neighbor"]["index_top"]
 			set_avail_tile(side["neighbor"]["index_top"])
 			if Debug.ISDEBUG:
 				print("Top Side Check")
-		#if is_compare(1, side_left, getRightSide(info_matrix)) || is_compare(2, side_left, getRightSide(info_matrix)) || is_compare(0, side_left, getRightSide(info_matrix)):
 		if uniq_items(side_left) == getRightSide(info_matrix):
-			#corner["sides"]["index_left"] = side["neighbor"]["index_left"]
 			set_avail_tile(side["neighbor"]["index_left"])
 			if Debug.ISDEBUG:
 				print("Left Side Check")
-		#if is_compare(1, side_bottom, getTopSide(info_matrix)) || is_compare(2, side_bottom,  getTopSide(info_matrix)) || is_compare(0, side_bottom,  getTopSide(info_matrix)):
 		if uniq_items(side_bottom) == getTopSide(info_matrix):
-			#corner["sides"]["index_bottom"] = side["neighbor"]["index_bottom"]
 			set_avail_tile(side["neighbor"]["index_bottom"])
 			if Debug.ISDEBUG:
 				print("Bottom Side Check")
-		#if is_compare(1, side_right, getLeftSide(info_matrix)) || is_compare(2, side_right, getLeftSide(info_matrix)) || is_compare(0, side_right, getLeftSide(info_matrix)):
 		if uniq_items(side_right) == getLeftSide(info_matrix):
 			set_avail_tile(side["neighbor"]["index_right"])
-			#corner["sides"]["index_right"] = side["neighbor"]["index_right"]
 			if Debug.ISDEBUG:
 				print("Right Side Check")
 	
