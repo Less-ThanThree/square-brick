@@ -352,12 +352,6 @@ func finding_complete_roads(zone_data):
 			founds_angle = 0
 			
 	return complete
-#func print_zones(zones):
-	#for zone in zones:
-		#print("Zone:")
-		#for cell in zone:
-			#print(cell)
-		#print("----")
 
 func fill_block_in_matrix(i, j, block):
 	var start_x = i * BLOCK_SIZE
@@ -398,8 +392,9 @@ func get_available_corners(row: int, col: int, current_index: int):
 	var index_top_left = (row - 1) * grid_container.columns + (col - 1)
 	var index_top_right = (row - 1) * grid_container.columns + (col + 1)
 	var index_top_top = (row - 2) * grid_container.columns + col
-	#var index_bottom_left = (row + 1) * grid_container.columns + (col - 1)
-	#var index_bottom_right = (row + 1) * grid_container.columns + (col + 1)
+	
+	var index_bottom_left = row * grid_container.columns + (col - 2)
+	var index_bottom_right = row * grid_container.columns + ( col + 2)
 	
 	var current_tile = grid_container.get_child(current_index)
 	
@@ -416,8 +411,10 @@ func get_available_corners(row: int, col: int, current_index: int):
 			"index_top_left": 0,
 			"index_top_right": 0,
 			"index_top_top": 0,
-			#"index_bottom_left": 0,
-			#"index_bottom_right": 0,	
+		},
+		"neighbor_bottom": {
+			"index_left_bottom": null,
+			"index_right_bottom": null,
 		},
 		"top": [],
 		"left": [],
@@ -452,16 +449,12 @@ func get_available_corners(row: int, col: int, current_index: int):
 	if  grid_container.get_child(index_top_top) is Tile:
 		sides["angles"]["top_top"] = grid_container.get_child(index_top_top)
 		sides["neighbor_dial"]["index_top_top"] = index_top_top
-	#if grid_container.get_child(index_bottom_left) is Tile:
-		#sides["bottom_left"] = grid_container.get_child(index_bottom_left)
-		#sides["neighbor_dial"]["index_bottom_left"] = index_bottom_left
-	#if grid_container.get_child(index_bottom_right) is Tile:
-		#sides["bottom_right"] = grid_container.get_child(index_bottom_right)
-		#sides["neighbor_dial"]["index_bottom_right"] = index_bottom_right
+	if grid_container.get_child(index_bottom_left) is Tile:
+		sides["neighbor_bottom"]["index_left_bottom"] = grid_container.get_child(index_bottom_left)
+	if grid_container.get_child(index_bottom_right) is Tile:
+		sides["neighbor_bottom"]["index_right_bottom"] = grid_container.get_child(index_bottom_right)
 	
 	mapCorner.append(sides)
-
-#func black_hole_angles(angels: Dictionary, )
 
 func get_avalable_set_tile():
 	var info_matrix
@@ -497,27 +490,10 @@ func get_avalable_set_tile():
 		var side_bottom = side["bottom"].filter(func(item): return item != 5)
 		var side_right = side["right"].filter(func(item): return item != 5)
 		
-		#var side_top_left = side["top_left"].filter(func(item): return item != 5)
-		#var side_top_right = side["top_right"].filter(func(item): return item != 5)
-		#var side_top_top = side["top_top"].filter(func(item): return item != 5)
-		#var side_bottom_left = side["bottom_left"].filter(func(item): return item != 5)
-		#var side_bottom_right = side["bottom_right"].filter(func(item): return item != 5)
-		
-		#var corner = {
-			#"index": side["index"],
-			#"sides": {
-				#"index_top": null,
-				#"index_left": null,
-				#"index_bottom": null,
-				#"index_right": null,
-			#}
-		#}
-		
 		if uniq_items(side_left) == getRightSide(info_matrix):
 			set_avail_tile(side["neighbor"]["index_left"])
 			if Debug.ISDEBUG:
 				print("Left Side Check")
-		#elif 
 		if uniq_items(side_right) == getLeftSide(info_matrix):
 			set_avail_tile(side["neighbor"]["index_right"])
 			if Debug.ISDEBUG:
@@ -530,169 +506,163 @@ func get_avalable_set_tile():
 			set_avail_tile(side["neighbor"]["index_bottom"])
 			if Debug.ISDEBUG:
 				print("Bottom Side Check")
-	
+		if uniq_items(side_left) == getRightSide(info_matrix) && side["neighbor_bottom"]["index_left_bottom"] != null:
+			var tile_left_bottom = side["neighbor_bottom"]["index_left_bottom"]
+			var tile_left_side = tile_left_bottom.getRightSide().filter(func(item): return item != 5)
+			
+			if uniq_items(tile_left_side) == getLeftSide(info_matrix):
+				set_avail_tile(side["neighbor"]["index_left"])
+				if Debug.ISDEBUG:
+					print("Middle Left Side Check")
+			else:
+				set_tile_default(side["neighbor"]["index_left"])
+		if uniq_items(side_right) == getLeftSide(info_matrix) && side["neighbor_bottom"]["index_right_bottom"] != null:
+			var tile_right_bottom = side["neighbor_bottom"]["index_right_bottom"]
+			var tile_right_side = tile_right_bottom.getLeftSide().filter(func(item): return item != 5)
+			
+			if uniq_items(tile_right_side) == getRightSide(info_matrix):
+				set_avail_tile(side["neighbor"]["index_right"])
+				if Debug.ISDEBUG:
+					print("Middle Right Side Check")
+			else:
+				set_tile_default(side["neighbor"]["index_right"])
+		
 	for side in mapCorner:
 		var side_top = side["top"].filter(func(item): return item != 5)
 		var side_left = side["left"].filter(func(item): return item != 5)
 		var side_bottom = side["bottom"].filter(func(item): return item != 5)
 		var side_right = side["right"].filter(func(item): return item != 5)
 		
+		var is_angles_side = {
+			"top_left_inside": null,
+			"top_right_inside": null,
+			"top_left_outside": null,
+			"top_right_outside": null,
+			"top_top": null,
+		}
+		
 		for corner in side["angles"]:
-				if corner == "top_left":
-					if side["angles"][corner] != null:
-						var tile = side["angles"][corner]
-						
-#						outside 
-						var arr = tile.getBottomSide().filter(func(item): return item != 5)
-						if uniq_items(arr) == getTopSide(info_matrix) && uniq_items(side_left) == getRightSide(info_matrix):
-							set_avail_tile(side["neighbor"]["index_left"])
-							if Debug.ISDEBUG:
-								print("Bottom Left Side angle")
-						else:
-							set_tile_default(side["neighbor"]["index_left"])
-						
-#						inside
-						var arr_right = tile.getRightSide().filter(func(item): return item != 5)
-						if uniq_items(arr_right) == getLeftSide(info_matrix) && uniq_items(side_top) == getBottomSide(info_matrix):
-							set_avail_tile(side["neighbor"]["index_top"])
-							if Debug.ISDEBUG:
-								print("Top Right Side angle")
-						else:
-							set_tile_default(side["neighbor"]["index_top"])
-				if corner == "top_right":
-					if side["angles"][corner] != null:
-						var tile = side["angles"][corner]
-						
-#						outside
-						var arr = tile.getBottomSide().filter(func(item): return item != 5)
-						if uniq_items(arr) == getTopSide(info_matrix) && uniq_items(side_right) == getLeftSide(info_matrix):
-							set_avail_tile(side["neighbor"]["index_right"])
-							if Debug.ISDEBUG:
-								print("Bottom Right Side angle")
-						else:
-							set_tile_default(side["neighbor"]["index_right"])
+			if corner == "top_left":
+				if side["angles"][corner] != null:
+					var tile = side["angles"][corner]
+					
+#					outside 
+					var arr = tile.getBottomSide().filter(func(item): return item != 5)
+					if uniq_items(arr) == getTopSide(info_matrix) && uniq_items(side_left) == getRightSide(info_matrix):
+						set_avail_tile(side["neighbor"]["index_left"])
+						is_angles_side["top_left_outside"] = true
+						if Debug.ISDEBUG:
+							print("Bottom Left Side angle")
+					else:
+						is_angles_side["top_left_outside"] = false
+						set_tile_default(side["neighbor"]["index_left"])
 						
 #						inside
-						var arr_left = tile.getLeftSide().filter(func(item): return item != 5)
-						if uniq_items(arr_left) == getRightSide(info_matrix) && uniq_items(side_top) == getBottomSide(info_matrix):
-							set_avail_tile(side["neighbor"]["index_top"])
-							if Debug.ISDEBUG:
-								print("Bottom Right Side angle")
-						else:
-							set_tile_default(side["neighbor"]["index_top"])
-				if corner == "top_top":
-					if side["angles"][corner] != null:
-						var tile = side["angles"][corner]
-						var arr = tile.getBottomSide().filter(func(item): return item != 5)
-						if uniq_items(arr) == getTopSide(info_matrix) && uniq_items(side_top) == getBottomSide(info_matrix):
-							set_avail_tile(side["neighbor"]["index_top"])
-							if Debug.ISDEBUG:
-								print("Middle side check")
-						else:
-							set_tile_default(side["neighbor"]["index_top"])
-			#if corner != null:
+					var arr_right = tile.getRightSide().filter(func(item): return item != 5)
+					if uniq_items(arr_right) == getLeftSide(info_matrix) && uniq_items(side_top) == getBottomSide(info_matrix):
+						set_avail_tile(side["neighbor"]["index_top"])
+						is_angles_side["top_left_inside"] = true
+						if Debug.ISDEBUG:
+							print("Top Lefts Side angle")
+					else:
+						set_tile_default(side["neighbor"]["index_top"])
+						is_angles_side["top_left_inside"] = false
+			if corner == "top_right":
+				if side["angles"][corner] != null:
+					var tile = side["angles"][corner]
+					
+#					outside
+					var arr = tile.getBottomSide().filter(func(item): return item != 5)
+					if uniq_items(arr) == getTopSide(info_matrix) && uniq_items(side_right) == getLeftSide(info_matrix):
+						set_avail_tile(side["neighbor"]["index_right"])
+						is_angles_side["top_right_outside"] = true
+						if Debug.ISDEBUG:
+							print("Bottom Right Side angle")
+					else:
+						set_tile_default(side["neighbor"]["index_right"])
+						is_angles_side["top_right_outside"] = false
+						
+#					inside
+					var arr_left = tile.getLeftSide().filter(func(item): return item != 5)
+					if uniq_items(arr_left) == getRightSide(info_matrix) && uniq_items(side_top) == getBottomSide(info_matrix):
+						set_avail_tile(side["neighbor"]["index_top"])
+						is_angles_side["top_right_inside"] = true
+						if Debug.ISDEBUG:
+							print("Bottom Right Side angle")
+					else:
+						set_tile_default(side["neighbor"]["index_top"])
+						is_angles_side["top_right_inside"] = false
+			if corner == "top_top":
+				if side["angles"][corner] != null:
+					var tile = side["angles"][corner]
+					var arr = tile.getBottomSide().filter(func(item): return item != 5)
+					if uniq_items(arr) == getTopSide(info_matrix) && uniq_items(side_top) == getBottomSide(info_matrix):
+						set_avail_tile(side["neighbor"]["index_top"])
+						is_angles_side["top_top"] = true
+						if Debug.ISDEBUG:
+							print("Middle side check")
+					else:
+						set_tile_default(side["neighbor"]["index_top"])
+						is_angles_side["top_top"] = false
+#		3 ANGLES CHECK TOP
+		if is_angles_side["top_left_inside"] == true && is_angles_side["top_right_inside"] == true:
+			set_avail_tile(side["neighbor"]["index_top"])
+			if Debug.ISDEBUG:
+				print("3 Angles check")
+		
+		if is_angles_side["top_right_inside"] == true && is_angles_side["top_top"] == true:
+			if uniq_items(side_top) == getBottomSide(info_matrix):
+				set_avail_tile(side["neighbor"]["index_top"])
+				if Debug.ISDEBUG:
+					print("3 Angles check")
+			else:
+				set_tile_default(side["neighbor"]["index_top"])
+		
+		if is_angles_side["top_left_inside"] == true && is_angles_side["top_top"] == true:
+			if uniq_items(side_top) == getBottomSide(info_matrix):
+				set_avail_tile(side["neighbor"]["index_top"])
+				if Debug.ISDEBUG:
+					print("3 Angles check")
+			else:
+				set_tile_default(side["neighbor"]["index_top"])
+		
+		if (is_angles_side["top_left_inside"] == true && is_angles_side["top_right_inside"] == false) || (is_angles_side["top_left_inside"] == false && is_angles_side["top_right_inside"] == true):
+			set_tile_default(side["neighbor"]["index_top"])
+		
+		if (is_angles_side["top_left_inside"] == true && is_angles_side["top_top"] == false) || (is_angles_side["top_left_inside"] == false && is_angles_side["top_top"] == true):
+			set_tile_default(side["neighbor"]["index_top"])
+		
+		if (is_angles_side["top_right_inside"] == true && is_angles_side["top_top"] == false) || (is_angles_side["top_right_inside"] == false && is_angles_side["top_top"] == true):
+			set_tile_default(side["neighbor"]["index_top"])
+		
+#		3 ANGLES BOTTOM CHECK
+		if is_angles_side["top_left_outside"] == true && side["neighbor_bottom"]["index_left_bottom"] != null:
+			var tile_bottom_left = side["neighbor_bottom"]["index_left_bottom"]
+			var tile_bottom_side = tile_bottom_left.getRightSide().filter(func(item): return item != 5)
 			
-				
-			#print(side["angles"][corner])
-				
-#		Top Left Side
-		#if side_top_left.size() <= 0 && side_top_right.size() <= 0:
-			#if uniq_items(side_top) == getBottomSide(info_matrix):
-				#set_avail_tile(side["neighbor"]["index_top"])
-				#if Debug.ISDEBUG:
-					#print("Top Side Check")
-			#if uniq_items(side_right) == getLeftSide(info_matrix):
-				#set_avail_tile(side["neighbor"]["index_right"])
-				#if Debug.ISDEBUG:
-					#print("Right Side Check")
-			#if uniq_items(side_left) == getRightSide(info_matrix):
-				#set_avail_tile(side["neighbor"]["index_left"])
-				#if Debug.ISDEBUG:
-					#print("Left Side Check")
-		#else:
-			#if uniq_items(side_top) == getBottomSide(info_matrix) && uniq_items(side_top_left) == getLeftSide(info_matrix):
-				#set_avail_tile(side["neighbor"]["index_top"])
-				#if Debug.ISDEBUG:
-					#print("Top Right Side Check")
-			#elif uniq_items(side_top) == getBottomSide(info_matrix) && uniq_items(side_top_right) == getRightSide(info_matrix):
-				#set_avail_tile(side["neighbor"]["index_top"])
-				#if Debug.ISDEBUG:
-					#print("Top Left Side Check")
-			#if 
-			#if uniq_items(side_top_left) == getRightSide(info_matrix):
-				#set_avail_tile(side["neighbor"]["index_top"])
-				#if Debug.ISDEBUG:
-					#print("Top-Left Side Check")
-			#else:
-				
-			#if side_top_left.size() > 0 && side_top_right.size() > 0:
-##				Сравнение 2 угла диагонали
-				#if uniq_items(side_top_left) == getLeftSide(info_matrix) && uniq_items(side_top_right) == getRightSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_top"])
-					#if Debug.ISDEBUG:
-						#print("3 angle Side Check")
-			#if side_top_left.size() > 0:
-				#if uniq_items(side_top_left) == getLeftSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_top"])
-					#if Debug.ISDEBUG:
-						#print("2 angle left Side Check")
-			#if side_top_right.size() > 0:
-				#if uniq_items(side_top_right) == getRightSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_top"])
-					#if Debug.ISDEBUG:
-						#print("2 angle right Side Check")
-			#if side_bottom_left.size() > 0 && side_bottom_right.size() > 0:
-##				Сравнение 2 угла диагонали
-				#if uniq_items(side_bottom_left) == getLeftSide(info_matrix) && uniq_items(side_bottom_right) == getRightSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_top"])
-					#if Debug.ISDEBUG:
-						#print("3 angle Side Check")
-			#if side_bottom_left.size() > 0:
-				#if uniq_items(side_bottom_left) == getLeftSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_top"])
-					#if Debug.ISDEBUG:
-						#print("2 angle left Side Check")
-			#if side_bottom_right.size() > 0:
-				#if uniq_items(side_bottom_right) == getRightSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_top"])
-					#if Debug.ISDEBUG:
-						#print("2 angle right Side Check")
-			#if side_top_left.size() <= 0 || side_top_right.size() <= 0:
-				#set_avail_tile(side["neighbor"]["index_top"])
-				#if Debug.ISDEBUG:
-					#print("Top Side Check")
-	
-			#if side_top_left.size() > 0:
-				#if uniq_items(side_top_left) == getTopSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_left"])
-					#if Debug.ISDEBUG:
-						#print("Left Side Check")
-			#if side_bottom_left.size() > 0:
-				#if uniq_items(side_bottom_left) == getBottomSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_left"])
-					#if Debug.ISDEBUG:
-						#print("Left Side Check")
-
-
-			#if (side_top_left.size() <= 0 && side_top_right.size() <= 0) || (side_bottom_left.size() <= 0 && side_bottom_right.size() <= 0):
-				#set_avail_tile(side["neighbor"]["index_right"])
-				#if Debug.ISDEBUG:
-					#print("Right Side Check")
-			#if side_top_right.size() > 0:
-				#if uniq_items(side_top_right) == getTopSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_right"])
-					#if Debug.ISDEBUG:
-						#print("Right Side Check")
-			#if side_bottom_right.size() > 0:
-				#if uniq_items(side_bottom_right) == getBottomSide(info_matrix):
-					#set_avail_tile(side["neighbor"]["index_right"])
-					#if Debug.ISDEBUG:
-						#print("Right Side Check")
-	
-		#availCorner.append(corner)
-
-#func compare_angle_map(info, left_side, right_side):
-	#
+			if getLeftSide(info_matrix) == uniq_items(tile_bottom_side):
+				set_avail_tile(side["neighbor"]["index_left"])
+				if Debug.ISDEBUG:
+					print("3 Angles check")
+			else:
+				set_tile_default(side["neighbor"]["index_left"])
+		
+		if is_angles_side["top_right_outside"] == true && side["neighbor_bottom"]["index_right_bottom"] != null:
+			var tile_bottom_right = side["neighbor_bottom"]["index_right_bottom"]
+			var tile_bottom_side = tile_bottom_right.getLeftSide().filter(func(item): return item != 5)
+			
+			if getRightSide(info_matrix) == uniq_items(tile_bottom_side):
+				set_avail_tile(side["neighbor"]["index_right"])
+				if Debug.ISDEBUG:
+					print("3 Angles check")
+			else:
+				set_tile_default(side["neighbor"]["index_right"])
+		
+		if is_angles_side["top_left_outside"] == false && side["neighbor_bottom"]["index_left_bottom"] != null:
+			set_tile_default(side["neighbor"]["index_left"])
+		
+		if is_angles_side["top_right_outside"] == false && side["neighbor_bottom"]["index_right_bottom"] != null:
+			set_tile_default(side["neighbor"]["index_right"])
 
 func getTopSide(matrix_top_level: Array) -> Array:
 	var array = [
