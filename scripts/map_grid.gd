@@ -395,6 +395,7 @@ func get_available_corners(row: int, col: int, current_index: int):
 	
 	var index_bottom_left = row * grid_container.columns + (col - 2)
 	var index_bottom_right = row * grid_container.columns + ( col + 2)
+	var index_top_bottom = (row + 2) * grid_container.columns + col
 	
 	var current_tile = grid_container.get_child(current_index)
 	
@@ -415,6 +416,7 @@ func get_available_corners(row: int, col: int, current_index: int):
 		"neighbor_bottom": {
 			"index_left_bottom": null,
 			"index_right_bottom": null,
+			"index_top_bottom": null,
 		},
 		"top": [],
 		"left": [],
@@ -453,6 +455,8 @@ func get_available_corners(row: int, col: int, current_index: int):
 		sides["neighbor_bottom"]["index_left_bottom"] = grid_container.get_child(index_bottom_left)
 	if grid_container.get_child(index_bottom_right) is Tile:
 		sides["neighbor_bottom"]["index_right_bottom"] = grid_container.get_child(index_bottom_right)
+	if grid_container.get_child(index_top_bottom) is Tile:
+		sides["neighbor_bottom"]["index_top_bottom"] = grid_container.get_child(index_top_bottom)
 	
 	mapCorner.append(sides)
 
@@ -482,7 +486,7 @@ func get_avalable_set_tile():
 		print(getBottomSide(info_matrix))
 		print("Current tile right")
 		print(getRightSide(info_matrix))
-		print(mapCorner)
+		#print(mapCorner)
 	
 	for side in mapCorner:
 		var side_top = side["top"].filter(func(item): return item != 5)
@@ -552,10 +556,12 @@ func get_avalable_set_tile():
 						set_avail_tile(side["neighbor"]["index_left"])
 						is_angles_side["top_left_outside"] = true
 						if Debug.ISDEBUG:
-							print("Bottom Left Side angle")
+							print("Bottom Left otside angle")
 					else:
 						is_angles_side["top_left_outside"] = false
 						set_tile_default(side["neighbor"]["index_left"])
+						#if Debug.ISDEBUG:
+							#print("Bottom Left otside angle disable")
 						
 #						inside
 					var arr_right = tile.getRightSide().filter(func(item): return item != 5)
@@ -563,10 +569,12 @@ func get_avalable_set_tile():
 						set_avail_tile(side["neighbor"]["index_top"])
 						is_angles_side["top_left_inside"] = true
 						if Debug.ISDEBUG:
-							print("Top Lefts Side angle")
+							print("Bottom Left inside angle")
 					else:
 						set_tile_default(side["neighbor"]["index_top"])
 						is_angles_side["top_left_inside"] = false
+						#if Debug.ISDEBUG:
+							#print("Top Left inside angle disable")
 			if corner == "top_right":
 				if side["angles"][corner] != null:
 					var tile = side["angles"][corner]
@@ -577,10 +585,12 @@ func get_avalable_set_tile():
 						set_avail_tile(side["neighbor"]["index_right"])
 						is_angles_side["top_right_outside"] = true
 						if Debug.ISDEBUG:
-							print("Bottom Right Side angle")
+							print("Bottom Right outside angle")
 					else:
 						set_tile_default(side["neighbor"]["index_right"])
 						is_angles_side["top_right_outside"] = false
+						#if Debug.ISDEBUG:
+							#print("Bottom Right outside angle disable")
 						
 #					inside
 					var arr_left = tile.getLeftSide().filter(func(item): return item != 5)
@@ -588,10 +598,12 @@ func get_avalable_set_tile():
 						set_avail_tile(side["neighbor"]["index_top"])
 						is_angles_side["top_right_inside"] = true
 						if Debug.ISDEBUG:
-							print("Bottom Right Side angle")
+							print("Bottom Right inside angle")
 					else:
 						set_tile_default(side["neighbor"]["index_top"])
 						is_angles_side["top_right_inside"] = false
+						#if Debug.ISDEBUG:
+							#print("Bottom Right inside angle disable")
 			if corner == "top_top":
 				if side["angles"][corner] != null:
 					var tile = side["angles"][corner]
@@ -637,32 +649,86 @@ func get_avalable_set_tile():
 		
 #		3 ANGLES BOTTOM CHECK
 		if is_angles_side["top_left_outside"] == true && side["neighbor_bottom"]["index_left_bottom"] != null:
+			#if side["neighbor_bottom"]["index_top_bottom"] == null:
 			var tile_bottom_left = side["neighbor_bottom"]["index_left_bottom"]
 			var tile_bottom_side = tile_bottom_left.getRightSide().filter(func(item): return item != 5)
-			
+			print(side["neighbor_bottom"]["index_top_bottom"])
+				
 			if getLeftSide(info_matrix) == uniq_items(tile_bottom_side):
 				set_avail_tile(side["neighbor"]["index_left"])
 				if Debug.ISDEBUG:
-					print("3 Angles check")
+					print("3 Angles check bottom")
 			else:
 				set_tile_default(side["neighbor"]["index_left"])
+			#else:
+				#set_tile_default(side["neighbor"]["index_left"])
+				#set_tile_default(side["neighbor"]["index_bottom"])
 		
 		if is_angles_side["top_right_outside"] == true && side["neighbor_bottom"]["index_right_bottom"] != null:
+			print(side["neighbor_bottom"]["index_top_bottom"])
+			#if side["neighbor_bottom"]["index_top_bottom"] == null:
 			var tile_bottom_right = side["neighbor_bottom"]["index_right_bottom"]
 			var tile_bottom_side = tile_bottom_right.getLeftSide().filter(func(item): return item != 5)
-			
+				
 			if getRightSide(info_matrix) == uniq_items(tile_bottom_side):
 				set_avail_tile(side["neighbor"]["index_right"])
 				if Debug.ISDEBUG:
-					print("3 Angles check")
+					print("3 Angles check bottom")
 			else:
 				set_tile_default(side["neighbor"]["index_right"])
+			#else:
+				#set_tile_default(side["neighbor"]["index_right"])
+				#set_tile_default(side["neighbor"]["index_bottom"])
 		
 		if is_angles_side["top_left_outside"] == false && side["neighbor_bottom"]["index_left_bottom"] != null:
 			set_tile_default(side["neighbor"]["index_left"])
 		
 		if is_angles_side["top_right_outside"] == false && side["neighbor_bottom"]["index_right_bottom"] != null:
 			set_tile_default(side["neighbor"]["index_right"])
+		
+		#4 ANGLES CHECK
+		if side["angles"]["top_left"] != null && side["angles"]["top_right"] != null && side["angles"]["top_top"] != null:
+			print("FIND 4 ANGLES TOP")
+			if is_angles_side["top_right_inside"] == true && is_angles_side["top_left_inside"] == true && is_angles_side["top_top"] == true:
+				if uniq_items(side_top) == getBottomSide(info_matrix):
+					set_avail_tile(side["neighbor"]["index_top"])
+					print(side["neighbor"]["index_top"])
+					print( grid_container.get_child(side["neighbor"]["index_top"]) is EmptyMapTile)
+					print(10 * grid_container.columns + 9)
+					#set_avail_tile(side["neighbor"]["index_left"])
+					#set_avail_tile(side["neighbor"]["index_right"])
+					#set_avail_tile(side["neighbor"]["index_bottom"])
+					if Debug.ISDEBUG:
+						print("4 Angles check")
+			else:
+				print("zalupniy")
+				print( grid_container.get_child(side["neighbor"]["index_top"]) is EmptyMapTile)
+				print(10 * grid_container.columns + 9)
+				set_tile_default(side["neighbor"]["index_top"])
+					#set_tile_default(side["neighbor"]["index_left"])
+					#set_tile_default(side["neighbor"]["index_right"])
+					#set_tile_default(side["neighbor"]["index_bottom"])
+			
+		#if side["neighbor_bottom"]["index_top_bottom"] != null && is_angles_side["top_right_outside"] == true && is_angles_side["top_left_outside"] == true:
+			#var tile_bottom_top = side["neighbor_bottom"]["index_top_bottom"]
+			#var side_bottom_top = tile_bottom_top.getTopSide().filter(func(item): return item != 5)
+			#print("4 ANGLES FIND BOTTOM")
+			#
+			#if uniq_items(side_top) == getBottomSide(info_matrix):
+				#set_avail_tile(side["neighbor"]["index_top"])
+				#if Debug.ISDEBUG:
+					#print("4 Angles check")
+			#else:
+				#set_tile_default(side["neighbor"]["index_top"])
+			#
+			#if uniq_items(side_bottom_top) == getBottomSide(info_matrix):
+				#set_avail_tile(side["neighbor"]["index_bottom"])
+				#if Debug.ISDEBUG:
+					#print("4 Angles check")
+			#else:
+				#set_tile_default(side["neighbor"]["index_bottom"])
+		
+		#if is_angles_side["top_right_inside"] == true && is_angles_side["top_left_inside"] == true && is_angles_side["top_top"] == true && un
 
 func getTopSide(matrix_top_level: Array) -> Array:
 	var array = [
@@ -703,11 +769,13 @@ func getRightSide(matrix: Array) -> Array:
 func set_avail_tile(index):
 	var current_tile = grid_container.get_child(index)
 	if current_tile is EmptyMapTile:
+		#print("Set avail %s" % [index])
 		current_tile.modulate_avail()
 
 func set_tile_default(index):
 	var current_tile = grid_container.get_child(index)
 	if current_tile is EmptyMapTile:
+		#print("Set default %s" % [index])
 		current_tile.modulate_default()
 
 func reset_tiles(info: Array):
