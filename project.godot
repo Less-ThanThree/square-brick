@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 Debug="*res://scripts/global/debug.gd"
 Player="*res://scripts/global/player.gd"
 
+[global_group]
+
+build="Коллизия Здания"
+
 [input]
 
 rotate_left={

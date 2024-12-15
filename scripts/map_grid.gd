@@ -21,8 +21,10 @@ var mapTiles = []
 var dfsMapMatrix = []
 var dfsGlobalMapMatrix = []
 var mapIndex = []
+var tileIndex = []
 var mapCorner = []
 var availCorner = []
+var meeplePlayer = []
 var mapFindZonesSize = {
 	"Build": 0,
 	"Road": 0,
@@ -117,7 +119,6 @@ func set_tile_map(row: int, col: int, tile_info):
 	grid_container.move_child(new_tile, index)
 	
 	find_tile_compare(row, col, index)
-	#get_available_corners(row, col, index)
 	
 	currentTileRotate = 0.0
 
@@ -138,7 +139,8 @@ func set_first_map_tile(row: int, col: int, tile_info):
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
 	
-	#get_available_corners(row, col, index)
+	tileIndex.append(index)
+	
 	find_tile_compare(row, col, index)
 	skip_meeple_set()
 
@@ -190,7 +192,7 @@ func _on_map_hover_tiles_is_tile_rotate(angle) -> void:
 	currentTileRotate = angle
 	get_avalable_set_tile()
 
-func _on_meeple_set():
+func _on_meeple_set(node):
 	Player.decrease_meeple(1)
 	Player.update_current_state(Player.STATE.CHOOSE_TILE)
 	isCurrentMeepleChoose = false
@@ -224,7 +226,7 @@ func find_zones_2():
 					var dict = {
 						"Zone type": zone_type,
 						"Zones": zone,
-						#"Index": mapIndex[-1],
+						"Index": tileIndex[-1],
 					}
 					if zone_type != "Build_corner":
 						zones.append(dict)
@@ -692,18 +694,18 @@ func get_avalable_set_tile():
 			if is_angles_side["top_right_inside"] == true && is_angles_side["top_left_inside"] == true && is_angles_side["top_top"] == true:
 				if uniq_items(side_top) == getBottomSide(info_matrix):
 					set_avail_tile(side["neighbor"]["index_top"])
-					print(side["neighbor"]["index_top"])
-					print( grid_container.get_child(side["neighbor"]["index_top"]) is EmptyMapTile)
-					print(10 * grid_container.columns + 9)
+					#print(side["neighbor"]["index_top"])
+					#print( grid_container.get_child(side["neighbor"]["index_top"]) is EmptyMapTile)
+					#print(10 * grid_container.columns + 9)
 					#set_avail_tile(side["neighbor"]["index_left"])
 					#set_avail_tile(side["neighbor"]["index_right"])
 					#set_avail_tile(side["neighbor"]["index_bottom"])
 					if Debug.ISDEBUG:
 						print("4 Angles check")
 			else:
-				print("zalupniy")
-				print( grid_container.get_child(side["neighbor"]["index_top"]) is EmptyMapTile)
-				print(10 * grid_container.columns + 9)
+				#print("zalupniy")
+				#print( grid_container.get_child(side["neighbor"]["index_top"]) is EmptyMapTile)
+				#print(10 * grid_container.columns + 9)
 				set_tile_default(side["neighbor"]["index_top"])
 					#set_tile_default(side["neighbor"]["index_left"])
 					#set_tile_default(side["neighbor"]["index_right"])

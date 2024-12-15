@@ -11,9 +11,9 @@ func _ready() -> void:
 	load_grid_meeple()
 
 func load_grid_meeple():
-	for col in range(9):
+	for col in range(25):
 		var meeple_tile = meeple_panel.instantiate()
-		meeple_tile.custom_minimum_size = Vector2(85, 85)
+		meeple_tile.custom_minimum_size = Vector2(50, 50)
 		meeple_tile.connect("meeple_set", _on_meeple_set)
 		disabled.connect(meeple_tile._on_disabled)
 		add_child(meeple_tile)
@@ -21,7 +21,7 @@ func load_grid_meeple():
 func _on_meeple_set(node):
 	clear_meeple_advice(node)
 	emit_signal("disabled")
-	emit_signal("meeple_set")
+	emit_signal("meeple_set", node)
 	change_state_disabled()
 	if Debug.ISDEBUG:
 		print("meeple_set")
