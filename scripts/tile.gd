@@ -227,7 +227,7 @@ func rotate_transform_counterclockwise() -> void:
 
 func rotate_grid_meeple():
 	var children = meeple_grid.get_children()
-	var rows = 3
+	var rows = 5
 	var cols = children.size() / rows
 	var new_order = []
 	for col in range(cols):
@@ -334,22 +334,31 @@ func _on_tile_set():
 		find_zones()
 		var meeple_center = []
 		for zone in zones:
-			meeple_center.append(get_array_center(zone["Zones"]))
+			var meeple_dict = {
+				"index": get_array_center(zone["Zones"]),
+				"zone": zone["Zone type"]
+			}
+			meeple_center.append(meeple_dict)
 		
+		if Debug.ISDEBUG:
+			print("FIND MEEPLE ZONE")
 		for meeple in meeple_center:
-			var index = (meeple.y - 2) * meeple_grid.columns + (meeple.x - 2)
-			set_avaliable_grid_meeple(index)
+			var index = meeple["index"].y * meeple_grid.columns + meeple["index"].x
+			if Debug.ISDEBUG:
+				print(meeple)
+			set_avaliable_grid_meeple(index, meeple["zone"])
 	is_set = true
 
-func set_avaliable_grid_meeple(index: int):
+func set_avaliable_grid_meeple(index: int, zone: String):
 	var tile_meeple = meeple_grid.get_child(index)
 	var tile_texture = tile_meeple.get_node("TextureMeeple")
 	tile_meeple.is_meeple = true
+	tile_meeple.zone = zone
 	tile_texture.texture = meeple
 	tile_texture.self_modulate = Color(1, 1, 1, 0.5)
 
-func _on_meeple_grid_meeple_set() -> void:
-	emit_signal("meeple_set")
+func _on_meeple_grid_meeple_set(node) -> void:
+	emit_signal("meeple_set", node)
 
 func _on_meeple_skip() -> void:
 	emit_signal("meeple_skip")

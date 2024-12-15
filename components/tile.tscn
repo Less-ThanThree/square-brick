@@ -57,7 +57,7 @@ offset_bottom = 131.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-columns = 3
+columns = 5
 script = ExtResource("2_wvxkg")
 
 [connection signal="meeple_skip" from="." to="MeepleGrid" method="_on_tile_meeple_skip"]

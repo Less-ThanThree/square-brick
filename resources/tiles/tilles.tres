@@ -1261,6 +1261,11 @@ var tile_info_x5 = {
 			[0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0],
 		],
+		\"meeple_zone\": [
+			[1, 1, 1],
+			[0, 0, 0],
+			[0, 0, 0],
+		],
 		\"name\": \"brick_3\",
 		\"tile_src\": load(\"res://tiles/space/TIL3.png\"),
 		\"down_level\": {

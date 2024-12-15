@@ -1,6 +1,7 @@
 extends Panel
 
 @export var is_meeple: bool = false
+@export var zone: String
 
 @onready var meeple_texture = $TextureMeeple
 

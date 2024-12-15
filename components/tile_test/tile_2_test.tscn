@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=3 uid="uid://dsyqxrg5cwota"]
+
+[ext_resource type="Texture2D" uid="uid://c5jabjhsk5b05" path="res://tiles/space/TIL2.png" id="1_622q0"]
+[ext_resource type="Script" path="res://scripts/tile/tile.gd" id="1_acb47"]
+[ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="3_ea3qq"]
+
+[node name="Tile2Test" type="Control"]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_acb47")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_622q0")
+expand_mode = 2
+
+[node name="collision_build2" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Area2D" type="Area2D" parent="collision_build2" groups=["build"]]
+script = ExtResource("3_ea3qq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="collision_build2/Area2D"]
+position = Vector2(-577, -324)
+polygon = PackedVector2Array(440, 451, 449, 451, 472, 439, 501, 412, 515, 383, 516, 289, 511, 257, 493, 227, 467, 205, 448, 197, 434, 197, 429, 451)
+
+[node name="collision_build" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Area2D" type="Area2D" parent="collision_build" groups=["build"]]
+script = ExtResource("3_ea3qq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="collision_build/Area2D"]
+position = Vector2(-574, -324)
+rotation = 0.0054003
+polygon = PackedVector2Array(719.064, 195.12, 700.065, 195.222, 681.119, 205.325, 653.276, 234.476, 641.379, 253.54, 638.665, 306.556, 637.951, 359.56, 643.097, 386.533, 661.253, 415.435, 682.345, 432.322, 701.404, 443.219, 719.409, 444.121)

@@ -34,8 +34,6 @@ func _input(event):
 	# Zoom with mouse wheel
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			print(zoom)
-			print(min_zoom)
 			zoom -= Vector2(zoom_speed, zoom_speed)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			zoom += Vector2(zoom_speed, zoom_speed)
