@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dsyqxrg5cwota"]
+[gd_scene load_steps=6 format=3 uid="uid://dsyqxrg5cwota"]
 
 [ext_resource type="Texture2D" uid="uid://c5jabjhsk5b05" path="res://tiles/space/TIL2.png" id="1_622q0"]
-[ext_resource type="Script" path="res://scripts/tile/tile.gd" id="1_acb47"]
+[ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_acb47"]
+[ext_resource type="Resource" uid="uid://d4kro0e3cw15l" path="res://resources/tiles/tile_2.tres" id="2_5ge3d"]
 [ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="3_ea3qq"]
+[ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="4_bgnpy"]
 
 [node name="Tile2Test" type="Control"]
 custom_minimum_size = Vector2(256, 256)
@@ -14,9 +16,11 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(128, 128)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_acb47")
+tile_resource = ExtResource("2_5ge3d")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(256, 256)
@@ -69,3 +73,13 @@ script = ExtResource("3_ea3qq")
 position = Vector2(-574, -324)
 rotation = 0.0054003
 polygon = PackedVector2Array(719.064, 195.12, 700.065, 195.222, 681.119, 205.325, 653.276, 234.476, 641.379, 253.54, 638.665, 306.556, 637.951, 359.56, 643.097, 386.533, 661.253, 415.435, 682.345, 432.322, 701.404, 443.219, 719.409, 444.121)
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+script = ExtResource("4_bgnpy")

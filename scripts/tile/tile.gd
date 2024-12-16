@@ -1,22 +1,12 @@
-extends Node
+extends TileObject
 
-class_name TileObject
+class_name TileBlock
 
-enum TYPES {
-	NULL,
-	FIELD, 
-	BUILD,
-	ROAD,
-	DEADEND,
-	CHURCH,
-	BUILD_CORNER,
-}
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass
+	#emit_signal("show_meeple_advice")
 
-@export var left_side_1_object: TYPES
-@export var left_side_2_object: TYPES
-@export var top_side_1_object: TYPES
-@export var top_side_2_object: TYPES
-@export var right_side_1_object: TYPES
-@export var right_side_2_object: TYPES
-@export var bottom_side_1_object: TYPES
-@export var bottom_side_2_object: TYPES
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass

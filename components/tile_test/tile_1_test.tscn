@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cctlyoy10fhd8"]
+[gd_scene load_steps=6 format=3 uid="uid://cctlyoy10fhd8"]
 
 [ext_resource type="Texture2D" uid="uid://dspraks8074kn" path="res://tiles/space/TIL1.png" id="1_240ie"]
-[ext_resource type="Script" path="res://scripts/tile/tile.gd" id="1_ulwsk"]
+[ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_m7km2"]
+[ext_resource type="Resource" uid="uid://dhsitupxiajuw" path="res://resources/tiles/tile_1.tres" id="2_k0tv5"]
 [ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="3_jh1bo"]
+[ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="4_bfccr"]
 
 [node name="Tile1Test" type="Control"]
 custom_minimum_size = Vector2(256, 256)
@@ -14,9 +16,11 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(128, 128)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_ulwsk")
+script = ExtResource("1_m7km2")
+tile_resource = ExtResource("2_k0tv5")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(256, 256)
@@ -69,3 +73,13 @@ script = ExtResource("3_jh1bo")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="collision_build_2/Area2D"]
 position = Vector2(-572, -323)
 polygon = PackedVector2Array(438, 435, 462, 435, 462, 392, 463, 372, 474, 363, 511, 363, 515, 358, 516, 274, 501, 235, 472, 209, 450, 198, 436, 198)
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+script = ExtResource("4_bfccr")
