@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://h4aedd0qxwpj"]
+[gd_scene load_steps=6 format=3 uid="uid://h4aedd0qxwpj"]
 
 [ext_resource type="Script" path="res://scripts/player_camera.gd" id="1_1kooi"]
 [ext_resource type="Script" path="res://scripts/test_new_mechanics/map_3_new_tile_test.gd" id="1_6p1ye"]
 [ext_resource type="PackedScene" uid="uid://p3xxbv6ud05s" path="res://scenes/player.tscn" id="2_enrx4"]
 [ext_resource type="Script" path="res://scripts/test_new_mechanics/grid_container.gd" id="2_vt68j"]
+[ext_resource type="Script" path="res://scripts/test_new_mechanics/map_hover.gd" id="4_h0k00"]
 
 [node name="Map3NewTileTest" type="Control"]
 layout_mode = 3
@@ -36,6 +37,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="MapHover" type="GridContainer" parent="Map" node_paths=PackedStringArray("grid_container")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_h0k00")
+row = 20
+col = 20
+grid_container = NodePath(".")
+
 [node name="GridContainer" type="GridContainer" parent="Map" node_paths=PackedStringArray("grid_container")]
 layout_mode = 1
 anchors_preset = 8
@@ -53,5 +72,12 @@ script = ExtResource("2_vt68j")
 row = 20
 col = 20
 grid_container = NodePath(".")
+
+[connection signal="new_tile" from="." to="Map/GridContainer" method="_on_map_3_new_tile_test_new_tile"]
+[connection signal="update_tile_rotation" from="Map/MapHover" to="Map/GridContainer" method="_on_map_hover_update_tile_rotation"]
+[connection signal="tile_exited" from="Map/GridContainer" to="Map/MapHover" method="_on_grid_container_tile_exited"]
+[connection signal="tile_hovered" from="Map/GridContainer" to="Map/MapHover" method="_on_grid_container_tile_hovered"]
+[connection signal="tile_set" from="Map/GridContainer" to="." method="_on_grid_container_tile_set"]
+[connection signal="tile_set" from="Map/GridContainer" to="Map/MapHover" method="_on_grid_container_tile_set"]
 
 [editable path="UI/Player"]

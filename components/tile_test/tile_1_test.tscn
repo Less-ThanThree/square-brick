@@ -22,7 +22,16 @@ size_flags_vertical = 3
 script = ExtResource("1_m7km2")
 tile_resource = ExtResource("2_k0tv5")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Base" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 128)
+
+[node name="TextureRect" type="TextureRect" parent="Base"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 1
 anchors_preset = 8
@@ -36,10 +45,11 @@ offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(128, 128)
 texture = ExtResource("1_240ie")
 expand_mode = 2
 
-[node name="collisions_build_1" type="Control" parent="."]
+[node name="collisions_build_1" type="Control" parent="Base"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -49,15 +59,15 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Area2D" type="Area2D" parent="collisions_build_1" groups=["build"]]
+[node name="Area2D" type="Area2D" parent="Base/collisions_build_1" groups=["build"]]
 collision_mask = 2
 script = ExtResource("3_jh1bo")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="collisions_build_1/Area2D"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collisions_build_1/Area2D"]
 position = Vector2(-577, -323)
 polygon = PackedVector2Array(704, 455, 606.558, 454.599, 461, 454, 462, 438, 531, 438, 537, 421, 537, 387, 590, 385, 633, 386, 673, 407, 693, 430, 702, 450)
 
-[node name="collision_build_2" type="Control" parent="."]
+[node name="collision_build_2" type="Control" parent="Base"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -67,10 +77,10 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Area2D" type="Area2D" parent="collision_build_2" groups=["build"]]
+[node name="Area2D" type="Area2D" parent="Base/collision_build_2" groups=["build"]]
 script = ExtResource("3_jh1bo")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="collision_build_2/Area2D"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collision_build_2/Area2D"]
 position = Vector2(-572, -323)
 polygon = PackedVector2Array(438, 435, 462, 435, 462, 392, 463, 372, 474, 363, 511, 363, 515, 358, 516, 274, 501, 235, 472, 209, 450, 198, 436, 198)
 

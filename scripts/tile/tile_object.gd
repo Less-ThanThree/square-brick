@@ -25,33 +25,40 @@ enum TYPES {
 
 @export var is_set: bool = false
 @export var is_meeple: bool = false
+@export var angle: float = 0.0
+
+@onready var base = $Base
 
 signal show_meeple_advice
 signal meeple_set
+signal rot_left
+signal rot_right
 
 var is_animation_rotate = false
 
 func _ready() -> void:
-	emit_signal("show_meeple_advice")
+	base.rotation_degrees = angle
 
 func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("rotate_left") && !is_animation_rotate:
+	if Input.is_action_just_pressed("rotate_left") && !is_animation_rotate && !is_set:
 		rotate_left()
-	if Input.is_action_just_pressed("rotate_right") && !is_animation_rotate:
+	if Input.is_action_just_pressed("rotate_right") && !is_animation_rotate && !is_set:
 		rotate_right()
 
 func rotate_right():
 	animate_rotation(90)
+	emit_signal("rot_right")
 
 func rotate_left():
 	animate_rotation(-90)
+	emit_signal("rot_left")
 
 func animate_rotation(rot: float):
 	var tween = create_tween()
-	var target_rot = deg_to_rad(rot) + self.rotation
+	var target_rot = deg_to_rad(rot) + base.rotation
 	is_animation_rotate = true
 	
-	tween.tween_property(self, "rotation", target_rot, 0.15)
+	tween.tween_property(base, "rotation", target_rot, 0.15)
 	tween.finished.connect(_on_rotate_end)
 	
 func _on_rotate_end():
@@ -59,3 +66,4 @@ func _on_rotate_end():
 
 func get_tile_resource():
 	return tile_resource
+	
