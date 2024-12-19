@@ -11,6 +11,9 @@ signal update_tile_rotation(angle: float)
 
 var current_angle: float = 0.0
 var current_tile
+var sides = ["top", "right", "bottom", "left"]
+var side_index = 0
+var current_side = sides[side_index] 
 
 func _ready() -> void:
 	create_empty_map()
@@ -55,8 +58,21 @@ func _on_grid_container_tile_exited(index: int) -> void:
 	grid_container.move_child(empty_tile, index)
 
 func _on_update_local_angle(angle: float):
+	if angle < 0:
+		side_index -= 1
+		if side_index < 0:
+			side_index = 3
+	if angle > 0:
+		side_index += 1
+		if side_index > sides.size() - 1:
+			side_index = 0
+	if angle == 0:
+		side_index = 0
+	current_side = sides[side_index]
 	current_angle += angle
-	emit_signal("update_tile_rotation", current_angle)
+	emit_signal("update_tile_rotation", current_angle, current_side)
 
 func _on_grid_container_tile_set() -> void:
 	current_angle = 0
+	side_index = 0
+	current_side = sides[side_index]

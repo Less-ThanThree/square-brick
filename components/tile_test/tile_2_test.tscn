@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dsyqxrg5cwota"]
+[gd_scene load_steps=7 format=3 uid="uid://dsyqxrg5cwota"]
 
 [ext_resource type="Texture2D" uid="uid://c5jabjhsk5b05" path="res://tiles/space/TIL2.png" id="1_622q0"]
 [ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_acb47"]
 [ext_resource type="Resource" uid="uid://d4kro0e3cw15l" path="res://resources/tiles/tile_2.tres" id="2_5ge3d"]
 [ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="3_ea3qq"]
 [ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="4_bgnpy"]
+[ext_resource type="PackedScene" uid="uid://wojgi76c8of4" path="res://components/tile_component/debug_center.tscn" id="6_uo2al"]
 
 [node name="Tile2Test" type="Control"]
 custom_minimum_size = Vector2(256, 256)
@@ -82,6 +83,10 @@ script = ExtResource("3_ea3qq")
 position = Vector2(-574, -324)
 rotation = 0.0054003
 polygon = PackedVector2Array(719.064, 195.12, 700.065, 195.222, 681.119, 205.325, 653.276, 234.476, 641.379, 253.54, 638.665, 306.556, 637.951, 359.56, 643.097, 386.533, 661.253, 415.435, 682.345, 432.322, 701.404, 443.219, 719.409, 444.121)
+
+[node name="DebugCenter" parent="." instance=ExtResource("6_uo2al")]
+layout_mode = 1
+pivot_offset = Vector2(128, 128)
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1

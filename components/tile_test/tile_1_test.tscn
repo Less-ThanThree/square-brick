@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cctlyoy10fhd8"]
+[gd_scene load_steps=7 format=3 uid="uid://cctlyoy10fhd8"]
 
 [ext_resource type="Texture2D" uid="uid://dspraks8074kn" path="res://tiles/space/TIL1.png" id="1_240ie"]
 [ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_m7km2"]
 [ext_resource type="Resource" uid="uid://dhsitupxiajuw" path="res://resources/tiles/tile_1.tres" id="2_k0tv5"]
 [ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="3_jh1bo"]
 [ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="4_bfccr"]
+[ext_resource type="PackedScene" uid="uid://wojgi76c8of4" path="res://components/tile_component/debug_center.tscn" id="4_iuj8g"]
 
 [node name="Tile1Test" type="Control"]
 custom_minimum_size = Vector2(256, 256)
@@ -83,6 +84,10 @@ script = ExtResource("3_jh1bo")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collision_build_2/Area2D"]
 position = Vector2(-572, -323)
 polygon = PackedVector2Array(438, 435, 462, 435, 462, 392, 463, 372, 474, 363, 511, 363, 515, 358, 516, 274, 501, 235, 472, 209, 450, 198, 436, 198)
+
+[node name="DebugCenter" parent="." instance=ExtResource("4_iuj8g")]
+layout_mode = 1
+pivot_offset = Vector2(128, 128)
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1

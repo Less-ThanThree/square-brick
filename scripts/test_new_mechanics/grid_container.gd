@@ -16,6 +16,7 @@ signal meeple_skip
 
 var current_tile_name
 var current_angle = 0.0
+var current_angle_side = "top"
 
 var tile_map = {
 	"tile_1": tile_1,
@@ -55,6 +56,7 @@ func _on_empty_tile_click(row: int, col: int, index: int):
 		tile_set.connect(new_tile._on_tile_set)
 		meeple_skip.connect(new_tile._on_tile_meeple_skip)
 		new_tile.angle = current_angle
+		new_tile.side = current_angle_side
 		
 		grid_container.remove_child(empty_tile)
 		empty_tile.queue_free()
@@ -81,5 +83,6 @@ func _on_empty_tile_exited(index: int):
 func _on_map_3_new_tile_test_new_tile(tile_name: String) -> void:
 	current_tile_name = tile_name
 
-func _on_map_hover_update_tile_rotation(angle: float) -> void:
+func _on_map_hover_update_tile_rotation(angle: float, side: String) -> void:
 	current_angle = angle
+	current_angle_side = side

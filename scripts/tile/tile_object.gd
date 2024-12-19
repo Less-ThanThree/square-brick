@@ -26,8 +26,10 @@ enum TYPES {
 @export var is_set: bool = false
 @export var is_meeple: bool = false
 @export var angle: float = 0.0
+@export var side: String = "top"
 
 @onready var base = $Base
+@onready var debug_center = $DebugCenter
 
 signal show_meeple_advice
 signal meeple_set
@@ -38,6 +40,7 @@ signal rot_right
 var is_animation_rotate = false
 
 func _ready() -> void:
+	set_debug_settings()
 	base.rotation_degrees = angle
 
 func _input(event: InputEvent) -> void:
@@ -75,4 +78,9 @@ func _on_tile_meeple_skip():
 
 func get_tile_resource():
 	return tile_resource
-	
+
+func set_debug_settings():
+	if Debug.ISDEBUG:
+		debug_center.visible = true
+	else:
+		debug_center.visible = false
