@@ -31,17 +31,18 @@ func _create_empty_tile(row: int, col: int):
 	grid_container.add_child(empty_tile_instance)
 
 func _on_grid_container_tile_hovered(index: int) -> void:
-	var new_tile = grid.get_current_tile_name().instantiate()
-	var empty_tile = grid_container.get_child(index)
-	new_tile.connect("rot_left", _on_update_local_angle.bind(-90))
-	new_tile.connect("rot_right", _on_update_local_angle.bind(90))
-	new_tile.angle = current_angle
-	
-	grid_container.remove_child(empty_tile)
-	empty_tile.queue_free()
+	if Player.get_current_state() == Player.STATE.CHOOSE_TILE:
+		var new_tile = grid.get_current_tile_name().instantiate()
+		var empty_tile = grid_container.get_child(index)
+		new_tile.connect("rot_left", _on_update_local_angle.bind(-90))
+		new_tile.connect("rot_right", _on_update_local_angle.bind(90))
+		new_tile.angle = current_angle
 		
-	grid_container.add_child(new_tile)
-	grid_container.move_child(new_tile, index)
+		grid_container.remove_child(empty_tile)
+		empty_tile.queue_free()
+			
+		grid_container.add_child(new_tile)
+		grid_container.move_child(new_tile, index)
 
 func _on_grid_container_tile_exited(index: int) -> void:
 	var empty_tile = EmptyTileScene.instantiate()

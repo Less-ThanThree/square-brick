@@ -4,11 +4,13 @@ extends GridContainer
 
 var count_grid = self.columns * 3
 var tile_resource: Resource
+var parent
 
 func _ready() -> void:
-	var parent = get_parent()
+	parent = get_parent()
 	
 	parent.connect("show_meeple_advice", _on_show_meeple_advice)
+	parent.connect("meeple_skip", _on_meeple_skip)
 	load_meeple_grid()
 	tile_resource = parent.get_tile_resource()
 
@@ -19,8 +21,21 @@ func load_meeple_grid():
 		add_child(meeple_tile)
 
 func _on_show_meeple_advice():
-	var meeple_advice_pos = tile_resource.meeple_position
-	for pos in meeple_advice_pos:
-		var index = meeple_advice_pos[pos].y * self.columns + meeple_advice_pos[pos].x
-		var meeple_panel = get_child(index)
-		meeple_panel._on_meeple_set()
+	if !parent.is_set:
+		var meeple_advice_pos = tile_resource.meeple_position
+		for pos in meeple_advice_pos:
+			var index = meeple_advice_pos[pos].y * self.columns + meeple_advice_pos[pos].x
+			var meeple_panel = get_child(index)
+			meeple_panel.connect("meeple_set", clear_meeple_advice)
+			meeple_panel._on_meeple_set()
+
+func clear_meeple_advice(node):
+	var meeples = get_children()
+	parent.is_set = true
+	for meeple in meeples:
+		if meeple != node:
+			meeple.clear_advice()
+	Player.update_current_state(Player.STATE.CHOOSE_TILE)
+
+func _on_meeple_skip():
+	clear_meeple_advice(null)

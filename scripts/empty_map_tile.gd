@@ -21,7 +21,8 @@ func _on_mouse_exited() -> void:
 	self.modulate = original_color  # Возвращаем исходный цвет, когда курсор уходит
 
 func _on_button_pressed() -> void:
-	self.emit_signal("tile_pressed")
+	if Player.get_current_state() == Player.STATE.CHOOSE_TILE:
+		self.emit_signal("tile_pressed")
 
 func _on_button_mouse_entered() -> void:
 	self.emit_signal("tile_mouse_entered")

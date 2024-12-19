@@ -31,6 +31,7 @@ enum TYPES {
 
 signal show_meeple_advice
 signal meeple_set
+signal meeple_skip
 signal rot_left
 signal rot_right
 
@@ -40,10 +41,11 @@ func _ready() -> void:
 	base.rotation_degrees = angle
 
 func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("rotate_left") && !is_animation_rotate && !is_set:
-		rotate_left()
-	if Input.is_action_just_pressed("rotate_right") && !is_animation_rotate && !is_set:
-		rotate_right()
+	if Player.get_current_state() == Player.STATE.CHOOSE_TILE:
+		if Input.is_action_just_pressed("rotate_left") && !is_animation_rotate && !is_set:
+			rotate_left()
+		if Input.is_action_just_pressed("rotate_right") && !is_animation_rotate && !is_set:
+			rotate_right()
 
 func rotate_right():
 	animate_rotation(90)
@@ -63,6 +65,13 @@ func animate_rotation(rot: float):
 	
 func _on_rotate_end():
 	is_animation_rotate = false
+
+func _on_tile_set():
+	Player.update_current_state(Player.STATE.CHOOSE_MIPLE)
+	emit_signal("show_meeple_advice")
+
+func _on_tile_meeple_skip():
+	emit_signal("meeple_skip")
 
 func get_tile_resource():
 	return tile_resource

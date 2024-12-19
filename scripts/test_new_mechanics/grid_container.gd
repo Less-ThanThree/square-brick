@@ -12,9 +12,10 @@ var tile_2 = preload("res://components/tile_test/tile_2_test.tscn")
 signal tile_hovered(index: int)
 signal tile_exited(index: int)
 signal tile_set
+signal meeple_skip
 
 var current_tile_name
-var current_angle
+var current_angle = 0.0
 
 var tile_map = {
 	"tile_1": tile_1,
@@ -25,7 +26,8 @@ func _ready() -> void:
 	create_empty_map()
 
 func _process(delta: float) -> void:
-	pass
+	if Input.is_action_just_pressed("skip") && Player.get_current_state() == Player.STATE.CHOOSE_MIPLE:
+		emit_signal("meeple_skip")
 
 func create_empty_map():
 	var block_size = Vector2(256, 256)  # Размер блоков 3x3
@@ -46,19 +48,21 @@ func _create_empty_tile(row: int, col: int):
 	grid_container.add_child(empty_tile_instance)
 
 func _on_empty_tile_click(row: int, col: int, index: int):
-	print("Clicked on empty tile on Row: %s, Col: %s, Index: %s" % [row, col, index])
-	var empty_tile = grid_container.get_child(index)
-	var new_tile = get_tile_by_name(current_tile_name).instantiate()
-	new_tile.is_set = true
-	new_tile.angle = current_angle
-	
-	grid_container.remove_child(empty_tile)
-	empty_tile.queue_free()
+	if Player.get_current_state() == Player.STATE.CHOOSE_TILE:
+		print("Clicked on empty tile on Row: %s, Col: %s, Index: %s" % [row, col, index])
+		var empty_tile = grid_container.get_child(index)
+		var new_tile = get_tile_by_name(current_tile_name).instantiate()
+		tile_set.connect(new_tile._on_tile_set)
+		meeple_skip.connect(new_tile._on_tile_meeple_skip)
+		new_tile.angle = current_angle
+		
+		grid_container.remove_child(empty_tile)
+		empty_tile.queue_free()
 
-	grid_container.add_child(new_tile)
-	grid_container.move_child(new_tile, index)
-	
-	emit_signal("tile_set")
+		grid_container.add_child(new_tile)
+		grid_container.move_child(new_tile, index)
+		
+		emit_signal("tile_set")
 #func set_tile(id_tile: int, index: int):
 
 func get_tile_by_name(scene_name: String):
