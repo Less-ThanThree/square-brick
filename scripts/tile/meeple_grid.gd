@@ -22,7 +22,6 @@ func load_meeple_grid():
 
 func _on_show_meeple_advice():
 	if !parent.is_set:
-		print(parent.side)
 		var meeple_advice_pos = tile_resource.meeple_position[parent.side]
 		for pos in meeple_advice_pos:
 			var index = meeple_advice_pos[pos].y * self.columns + meeple_advice_pos[pos].x

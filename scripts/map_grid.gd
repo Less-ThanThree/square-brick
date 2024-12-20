@@ -226,7 +226,7 @@ func find_zones_2():
 					var dict = {
 						"Zone type": zone_type,
 						"Zones": zone,
-						"Index": tileIndex[-1],
+						#"Index": tileIndex[-1],
 					}
 					if zone_type != "Build_corner":
 						zones.append(dict)

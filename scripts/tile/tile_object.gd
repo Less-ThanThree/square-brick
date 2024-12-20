@@ -14,14 +14,14 @@ enum TYPES {
 
 @export var tile_resource: Resource
 
-@export var left_side_1_object: TYPES
-@export var left_side_2_object: TYPES
-@export var top_side_1_object: TYPES
-@export var top_side_2_object: TYPES
-@export var right_side_1_object: TYPES
-@export var right_side_2_object: TYPES
-@export var bottom_side_1_object: TYPES
-@export var bottom_side_2_object: TYPES
+@export var left_side_inside: Array[TYPES]= []
+@export var left_side_outside:Array[TYPES]= []
+@export var top_side_inside: Array[TYPES]= []
+@export var top_side_outside: Array[TYPES]= []
+@export var right_side_inside: Array[TYPES]= []
+@export var right_side_outside: Array[TYPES]= []
+@export var bottom_side_inside: Array[TYPES]= []
+@export var bottom_side_outside: Array[TYPES]= []
 
 @export var is_set: bool = false
 @export var is_meeple: bool = false
@@ -36,6 +36,7 @@ signal meeple_set
 signal meeple_skip
 signal rot_left
 signal rot_right
+signal area_compare(sides: Dictionary, zone: String)
 
 var is_animation_rotate = false
 
@@ -84,3 +85,67 @@ func set_debug_settings():
 		debug_center.visible = true
 	else:
 		debug_center.visible = false
+
+func _on_area_entered(zone: String):
+	var side = get_side_on_local_angle()
+	emit_signal("area_compare", side, zone)
+		#print(left_side_isnide)
+		#print("BUILD", area.name)
+
+func get_side_on_local_angle() -> Dictionary:
+	var sides = {
+		"top_inside": null,
+		"top_outside": null,
+		"right_inside": null,
+		"right_outside": null,
+		"bottom_inside": null,
+		"bottom_outside": null,
+		"left_inside": null,
+		"left_outside": null,
+	}
+	match side:
+		"top":
+			sides = {
+				"top_inside": top_side_inside,
+				"top_outside": top_side_outside,
+				"right_inside": right_side_inside,
+				"right_outside": right_side_outside,
+				"bottom_inside": bottom_side_inside,
+				"bottom_outside": bottom_side_outside,
+				"left_inside": left_side_inside,
+				"left_outside": left_side_outside,
+			}
+		"right":
+			sides = {
+				"top_inside": left_side_inside,
+				"top_outside": left_side_outside,
+				"right_inside": top_side_inside,
+				"right_outside": top_side_outside,
+				"bottom_inside": right_side_inside,
+				"bottom_outside": right_side_outside,
+				"left_inside": bottom_side_inside,
+				"left_outside": bottom_side_outside,
+			}
+		"bottom":
+			sides = {
+				"top_inside": bottom_side_inside,
+				"top_outside": bottom_side_outside,
+				"right_inside": left_side_inside,
+				"right_outside": left_side_outside,
+				"bottom_inside": top_side_inside,
+				"bottom_outside": top_side_outside,
+				"left_inside": right_side_inside,
+				"left_outside": right_side_outside,
+			}
+		"left":
+			sides = {
+				"top_inside": right_side_inside,
+				"top_outside": right_side_outside,
+				"right_inside": bottom_side_inside,
+				"right_outside": bottom_side_outside,
+				"bottom_inside": left_side_inside,
+				"bottom_outside": left_side_outside,
+				"left_inside": top_side_inside,
+				"left_outside": top_side_outside,
+			}
+	return sides

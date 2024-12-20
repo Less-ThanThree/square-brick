@@ -22,6 +22,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_m7km2")
 tile_resource = ExtResource("2_k0tv5")
+left_side_inside = Array[int]([2])
+top_side_inside = Array[int]([1])
+right_side_inside = Array[int]([1])
+bottom_side_inside = Array[int]([2])
 
 [node name="Base" type="Control" parent="."]
 layout_mode = 1
@@ -66,7 +70,7 @@ script = ExtResource("3_jh1bo")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collisions_build_1/Area2D"]
 position = Vector2(-577, -323)
-polygon = PackedVector2Array(704, 455, 606.558, 454.599, 461, 454, 462, 438, 531, 438, 537, 421, 537, 387, 590, 385, 633, 386, 673, 407, 693, 430, 702, 450)
+polygon = PackedVector2Array(563, 415, 563, 480, 611, 480, 607, 412)
 
 [node name="collision_build_2" type="Control" parent="Base"]
 layout_mode = 1
@@ -83,7 +87,7 @@ script = ExtResource("3_jh1bo")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collision_build_2/Area2D"]
 position = Vector2(-572, -323)
-polygon = PackedVector2Array(438, 435, 462, 435, 462, 392, 463, 372, 474, 363, 511, 363, 515, 358, 516, 274, 501, 235, 472, 209, 450, 198, 436, 198)
+polygon = PackedVector2Array(478, 293, 394, 292, 391, 341, 483, 341)
 
 [node name="DebugCenter" parent="." instance=ExtResource("4_iuj8g")]
 layout_mode = 1

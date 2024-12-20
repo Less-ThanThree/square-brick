@@ -55,6 +55,7 @@ func _on_empty_tile_click(row: int, col: int, index: int):
 		var new_tile = get_tile_by_name(current_tile_name).instantiate()
 		tile_set.connect(new_tile._on_tile_set)
 		meeple_skip.connect(new_tile._on_tile_meeple_skip)
+		new_tile.connect("area_compare", _on_tile_compare.bind(index))
 		new_tile.angle = current_angle
 		new_tile.side = current_angle_side
 		
@@ -86,3 +87,7 @@ func _on_map_3_new_tile_test_new_tile(tile_name: String) -> void:
 func _on_map_hover_update_tile_rotation(angle: float, side: String) -> void:
 	current_angle = angle
 	current_angle_side = side
+
+func _on_tile_compare(sides: Dictionary, zone: String, index):
+	print(index)
+	print(sides)
