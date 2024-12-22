@@ -1,0 +1,37 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dhsitupxiajuw"]
+
+[sub_resource type="GDScript" id="GDScript_glsxd"]
+script/source = "extends Resource
+
+var matrix_meeple = [
+	[1, 0, 0],
+	[1, 0, 0],
+	[0, 1, 1],
+]
+
+var meeple_position = {
+	\"top\": {
+		\"position_1\": Vector2(0, 1),
+		\"position_2\": Vector2(1, 1),
+		\"position_3\": Vector2(1, 2),
+	},
+	\"left\": {
+		\"position_1\": Vector2(1, 2),
+		\"position_2\": Vector2(1, 1),
+		\"position_3\": Vector2(2, 1),
+	},
+	\"bottom\": {
+		\"position_1\": Vector2(1, 0),
+		\"position_2\": Vector2(1, 1),
+		\"position_3\": Vector2(2, 1),
+	},
+	\"right\": {
+		\"position_1\": Vector2(1, 0),
+		\"position_2\": Vector2(1, 1),
+		\"position_3\": Vector2(0, 1),
+	}
+}
+"
+
+[resource]
+script = SubResource("GDScript_glsxd")
