@@ -1,0 +1,84 @@
+[gd_scene load_steps=5 format=3 uid="uid://wojgi76c8of4"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_0542s"]
+font_size = 24
+font_color = Color(0.952456, 0, 0.241812, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_6t4lj"]
+font_size = 24
+font_color = Color(0.952941, 0, 0.243137, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rw14v"]
+font_size = 24
+font_color = Color(0.952941, 0, 0.243137, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_1p2mk"]
+font_size = 24
+font_color = Color(0.952941, 0, 0.243137, 1)
+
+[node name="DebugCenter" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LabelTop" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "TOP"
+label_settings = SubResource("LabelSettings_0542s")
+
+[node name="LabelBottom" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -23.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Bottom"
+label_settings = SubResource("LabelSettings_6t4lj")
+
+[node name="LabelRight" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "Right"
+label_settings = SubResource("LabelSettings_rw14v")
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_right = 40.0
+offset_bottom = 11.5
+grow_vertical = 2
+text = "Left"
+label_settings = SubResource("LabelSettings_1p2mk")

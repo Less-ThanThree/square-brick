@@ -162,10 +162,19 @@ func _on_tile_ready(row, col, node):
 	print(finds_zone_road)
 	
 	if mapFindZonesSize["Build"] != finds_zone_build.size():
+		for build in finds_zone_build:
+			for index_build in build["Index"]:
+				print(grid_container.get_child(index_build))
+				change_complete_zone(index_build)
+			#print(build["Index"])
+			#change_complete_zone(build)
 		Player.increase_score(20)
 		mapFindZonesSize["Build"] = finds_zone_build.size()
 	
 	if mapFindZonesSize["Road"] != finds_zone_road.size():
+		for road in finds_zone_road:
+			for index_road in road["Index"]:
+				change_complete_zone(index_road)
 		Player.increase_score(10)
 		mapFindZonesSize["Road"] = finds_zone_road.size()
 	
@@ -223,11 +232,25 @@ func find_zones_2():
 							zone_type = "Deadend"
 						5:
 							zone_type = "Build_corner"
+							
+					var zone_indexes = []
+					
+					for coord in zone:
+						var x_coord = coord.x
+						var y_coord = coord.y
+						
+						var grid_x = int(x_coord / 5)
+						var grid_y = int(y_coord / 5)
+						var grid_index = grid_y * grid_container.columns + grid_x
+						
+						zone_indexes.append(grid_index)
+						
 					var dict = {
 						"Zone type": zone_type,
 						"Zones": zone,
-						"Index": tileIndex[-1],
+						"Index": uniq_items(zone_indexes),
 					}
+					
 					if zone_type != "Build_corner":
 						zones.append(dict)
 	return zones
@@ -332,6 +355,11 @@ func finding_complete_buildings(zone_data):
 			if building_complete:
 				complete_bulildings.append(zone)
 	return complete_bulildings
+
+func change_complete_zone(index):
+	var tile = grid_container.get_child(index)
+	if tile is Tile:
+		tile.set_done_tile()
 
 func finding_complete_roads(zone_data):
 	var complete = []
@@ -806,3 +834,11 @@ func rotate_counterclockwise(matrix):
 			new_row.append(matrix[row][col])
 		rotated.append(new_row)
 	return rotated
+
+func get_fraction_float(num: float):
+	var fraction = num - int(num)
+	
+	if fraction < 0.5:
+		return floor(num)
+	else:
+		return ceil(num)
