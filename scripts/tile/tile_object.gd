@@ -27,6 +27,7 @@ enum TYPES {
 @export var is_meeple: bool = false
 @export var angle: float = 0.0
 @export var side: String = "top"
+#@export var is_current: bool = false
 
 @onready var base = $Base
 @onready var debug_center = $DebugCenter
@@ -39,6 +40,16 @@ signal rot_right
 signal area_compare(sides: Dictionary, zone: String)
 
 var is_animation_rotate = false
+var sides = {
+	"top_inside": null,
+	"top_outside": null,
+	"right_inside": null,
+	"right_outside": null,
+	"bottom_inside": null,
+	"bottom_outside": null,
+	"left_inside": null,
+	"left_outside": null,
+}
 
 func _ready() -> void:
 	set_debug_settings()
@@ -71,6 +82,7 @@ func _on_rotate_end():
 	is_animation_rotate = false
 
 func _on_tile_set():
+	sides = get_side_on_local_angle()
 	Player.update_current_state(Player.STATE.CHOOSE_MIPLE)
 	emit_signal("show_meeple_advice")
 
@@ -93,16 +105,6 @@ func _on_area_entered(zone: String):
 		#print("BUILD", area.name)
 
 func get_side_on_local_angle() -> Dictionary:
-	var sides = {
-		"top_inside": null,
-		"top_outside": null,
-		"right_inside": null,
-		"right_outside": null,
-		"bottom_inside": null,
-		"bottom_outside": null,
-		"left_inside": null,
-		"left_outside": null,
-	}
 	match side:
 		"top":
 			sides = {
@@ -148,4 +150,10 @@ func get_side_on_local_angle() -> Dictionary:
 				"left_inside": top_side_inside,
 				"left_outside": top_side_outside,
 			}
+	return sides
+
+func get_side_tile(side: String):
+	return sides[side]
+
+func get_sides() -> Dictionary:
 	return sides

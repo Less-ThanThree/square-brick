@@ -1,11 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://dsyqxrg5cwota"]
+[gd_scene load_steps=7 format=3 uid="uid://dw4sbvab35vck"]
 
-[ext_resource type="Texture2D" uid="uid://c5jabjhsk5b05" path="res://tiles/space/TIL2.png" id="1_622q0"]
-[ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_acb47"]
-[ext_resource type="Resource" uid="uid://d4kro0e3cw15l" path="res://resources/tiles/tile_2.tres" id="2_5ge3d"]
-[ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="3_ea3qq"]
-[ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="4_bgnpy"]
-[ext_resource type="PackedScene" uid="uid://wojgi76c8of4" path="res://components/tile_component/debug_center.tscn" id="6_uo2al"]
+[ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_gyiuj"]
+[ext_resource type="Resource" uid="uid://cbceaxobuberk" path="res://resources/tiles/tile_6.tres" id="2_iv4m1"]
+[ext_resource type="Texture2D" uid="uid://dms4v3jh8r468" path="res://tiles/space/TIL6.png" id="3_ne5fc"]
+[ext_resource type="Script" path="res://scripts/test_new_mechanics/area_tile.gd" id="4_eyf3s"]
+[ext_resource type="PackedScene" uid="uid://wojgi76c8of4" path="res://components/tile_component/debug_center.tscn" id="5_da7mt"]
+[ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="6_rp4q3"]
 
 [node name="Tile2Test" type="Control"]
 custom_minimum_size = Vector2(256, 256)
@@ -20,10 +20,10 @@ grow_vertical = 2
 pivot_offset = Vector2(128, 128)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_acb47")
-tile_resource = ExtResource("2_5ge3d")
+script = ExtResource("1_gyiuj")
+tile_resource = ExtResource("2_iv4m1")
 left_side_inside = Array[int]([2])
-top_side_inside = Array[int]([1])
+top_side_inside = Array[int]([2])
 right_side_inside = Array[int]([2])
 bottom_side_inside = Array[int]([1])
 
@@ -50,25 +50,8 @@ offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_622q0")
+texture = ExtResource("3_ne5fc")
 expand_mode = 2
-
-[node name="collision_build2" type="Control" parent="Base"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Area2D" type="Area2D" parent="Base/collision_build2" groups=["build"]]
-script = ExtResource("3_ea3qq")
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collision_build2/Area2D"]
-position = Vector2(-577, -324)
-polygon = PackedVector2Array(486, 292, 380, 289, 379, 366, 494, 363)
 
 [node name="collision_build" type="Control" parent="Base"]
 layout_mode = 1
@@ -81,14 +64,14 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Area2D" type="Area2D" parent="Base/collision_build" groups=["build"]]
-script = ExtResource("3_ea3qq")
+script = ExtResource("4_eyf3s")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/collision_build/Area2D"]
-position = Vector2(-574, -324)
+position = Vector2(-709, -348)
 rotation = 0.0054003
-polygon = PackedVector2Array(664.551, 285.415, 769.549, 284.848, 772.938, 356.831, 652.945, 358.479)
+polygon = PackedVector2Array(630, 368.603, 553.017, 372.019, 557.975, 178.989, 864.987, 180.331, 862.991, 366.345)
 
-[node name="DebugCenter" parent="." instance=ExtResource("6_uo2al")]
+[node name="DebugCenter" parent="." instance=ExtResource("5_da7mt")]
 layout_mode = 1
 pivot_offset = Vector2(128, 128)
 
@@ -100,4 +83,4 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 columns = 3
-script = ExtResource("4_bgnpy")
+script = ExtResource("6_rp4q3")

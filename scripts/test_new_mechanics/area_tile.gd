@@ -10,9 +10,9 @@ func _ready():
 	area_enter.connect(parent._on_area_entered)
 
 func _on_area_entered(area: Area2D):
-	if parent.is_set:
-		if area.is_in_group("build"):
-			emit_signal("area_enter", "build")
+	#if parent.is_current:
+	if area.is_in_group("build"):
+		emit_signal("area_enter", "build")
 #func _on_area_entered(other_area: Area2D):
 	#if other_area.is_in_group("build"):
 		#print(parent.left_side_isnide)

@@ -3,12 +3,16 @@ extends Control
 @onready var ui_count_deck = $UI/Player/UI/TileDeck
 
 signal new_tile(tile_name: String)
+signal first_tile(tile_name: String)
 
 var tile_deck_array = {
 	"tile_1": {
 		"count": 5,
 	},
 	"tile_2": {
+		"count": 5,
+	},
+	"tile_6": {
 		"count": 5,
 	}
 }
@@ -17,7 +21,7 @@ var tile_deck = []
 
 func _ready() -> void:
 	generate_tile_deck()
-	get_random_tile_deck()
+	set_firts_tile()
 
 func generate_tile_deck():
 	for tile in tile_deck_array:
@@ -30,7 +34,13 @@ func get_random_tile_deck():
 	var tile_info = tile_deck[rand_indx]
 	emit_signal("new_tile", tile_info)
 	remove_tile_deck_elem(rand_indx)
-	
+
+func set_firts_tile():
+	var rand_indx = randi() % tile_deck.size()
+	var tile_info = tile_deck[rand_indx]
+	emit_signal("first_tile", tile_info)
+	remove_tile_deck_elem(rand_indx)
+
 func remove_tile_deck_elem(index: int):
 	tile_deck.remove_at(index)
 	ui_count_deck.update_tile_count(tile_deck.size())

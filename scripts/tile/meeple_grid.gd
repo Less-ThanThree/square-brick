@@ -32,6 +32,7 @@ func _on_show_meeple_advice():
 func clear_meeple_advice(node):
 	var meeples = get_children()
 	parent.is_set = true
+	#parent.is_current = false
 	for meeple in meeples:
 		if meeple != node:
 			meeple.clear_advice()

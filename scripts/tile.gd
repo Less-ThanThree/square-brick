@@ -346,7 +346,7 @@ func _on_tile_set():
 			var index = meeple["index"].y * meeple_grid.columns + meeple["index"].x
 			if Debug.ISDEBUG:
 				print(meeple)
-			set_avaliable_grid_meeple(index, meeple["zone"])
+			#set_avaliable_grid_meeple(index, meeple["zone"])
 	is_set = true
 
 func set_avaliable_grid_meeple(index: int, zone: String):
@@ -365,3 +365,6 @@ func _on_meeple_skip() -> void:
 
 func get_top_level_matrix() -> Array:
 	return matrix_top_level
+
+func set_done_tile():
+	tile_sprite.self_modulate = Color(0, 0.806, 0.254)
