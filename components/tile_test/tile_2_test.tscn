@@ -22,10 +22,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_acb47")
 tile_resource = ExtResource("2_5ge3d")
-left_side_inside = Array[int]([2])
-top_side_inside = Array[int]([1])
-right_side_inside = Array[int]([2])
-bottom_side_inside = Array[int]([1])
 
 [node name="Base" type="Control" parent="."]
 layout_mode = 1
@@ -54,6 +50,7 @@ texture = ExtResource("1_622q0")
 expand_mode = 2
 
 [node name="collision_build2" type="Control" parent="Base"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -71,6 +68,7 @@ position = Vector2(-577, -324)
 polygon = PackedVector2Array(486, 292, 380, 289, 379, 366, 494, 363)
 
 [node name="collision_build" type="Control" parent="Base"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

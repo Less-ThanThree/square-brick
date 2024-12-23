@@ -4,7 +4,7 @@ extends Control
 @onready var map_grid = $Map/MapGrid
 @onready var map = $Map
 
-signal new_tile
+signal new_tile(info, tile)
 
 var tile_deck_array = []
 var global_map_tile_array = []
@@ -27,7 +27,7 @@ func _process(delta: float) -> void:
 
 func get_base_tile_array(resource) -> Array:
 	#var deck_base = resource.base_array_load
-	var deck_base = resource.base_array_load
+	var deck_base = resource.test_deck
 	var tile_base_array = []
 	for brick in deck_base:
 		for i in range(deck_base[brick]):
@@ -53,7 +53,7 @@ func get_center_element_grid(cols: int, rows: int):
 	var center_row = (rows / 2)
 	var center_col = (cols / 2)
 	var tile_first_tile = get_random_tile_deck()
-	map_grid.set_first_map_tile(center_row, center_col, tile_first_tile)
+	map_grid.set_first_map_tile(center_row, center_col, tile_first_tile, current_tile)
 	current_tile = get_random_tile_deck()
 
 func remove_tile_deck_elem(index: int):
@@ -63,7 +63,9 @@ func remove_tile_deck_elem(index: int):
 func get_random_tile_deck():
 	var rand_indx = randi() % tile_deck_array.size()
 	var info = tile_deck_array[rand_indx].name
-	emit_signal("new_tile", info)
+	current_tile = tile_deck_array[rand_indx].name_tile
+	emit_signal("new_tile", info, current_tile)
+	map_grid.set_current_tile_name(current_tile)
 	remove_tile_deck_elem(rand_indx)
 	return info
 

@@ -4,8 +4,11 @@ extends GridContainer
 @export var row: int
 @export var col: int
 @onready var EmptyTileScene = preload("res://components/empty_map_tile.tscn")
-@onready var GameTileScene = preload("res://components/tile.tscn")
+#@onready var GameTileScene = preload("res://components/tile.tscn")
 @onready var resource_tiles = load("res://resources/tiles/tilles.tres")
+
+var tile_1 = preload("res://components/tile_test/tile_1_test.tscn")
+var tile_2 = preload("res://components/tile_test/tile_2_test.tscn")
 
 signal tile_set
 signal tile_hovered
@@ -16,6 +19,11 @@ signal meeple_skip
 const MATRIX_SIZE = 20
 const MATRIX_SIZE_X2 = 100
 const BLOCK_SIZE = 5
+
+var tile_map = {
+	"tile_1": tile_1,
+	"tile_2": tile_2,
+}
 
 var mapTiles = []
 var dfsMapMatrix = []
@@ -52,6 +60,10 @@ var directions = [
 	Vector2(0, -1)  # вверх
 ]
 
+var current_tile_name
+var current_angle_side = "top"
+var current_angle
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var block_size = Vector2(256, 256)  # Размер блоков 3x3
@@ -72,12 +84,12 @@ func _process(delta: float) -> void:
 
 func _create_empty_tile(row: int, col: int):
 	var empty_tile_instance = EmptyTileScene.instantiate()
+	var index = row * grid_container.columns + col
 	empty_tile_instance.custom_minimum_size = Vector2(256,256)
-	empty_tile_instance.connect("tile_pressed", _on_empty_tile_click.bind(row,col,empty_tile_instance))
-	empty_tile_instance.connect("tile_mouse_entered", _on_empty_tile_hovered.bind(row,col,empty_tile_instance))
-	empty_tile_instance.connect("tile_mouse_exited", _on_empty_tile_exited.bind(row,col,empty_tile_instance))
+	empty_tile_instance.connect("tile_pressed", _on_empty_tile_click.bind(row,col,index))
+	empty_tile_instance.connect("tile_mouse_entered", _on_empty_tile_hovered.bind(index))
+	empty_tile_instance.connect("tile_mouse_exited", _on_empty_tile_exited.bind(index))
 	grid_container.add_child(empty_tile_instance)
-	mapTiles[row].append(empty_tile_instance)
 
 func create_empty_dfs(row: int, col: int, default_value = []) -> Array:
 	var matrix = []
@@ -88,49 +100,71 @@ func create_empty_dfs(row: int, col: int, default_value = []) -> Array:
 		matrix.append(row_arr)
 	return matrix
 
-func _on_empty_tile_click(row: int, col: int, empty_tile_instance: EmptyMapTile):
-	if !isCurrentMeepleChoose:
-		set_tile_map(row, col, currentTileInfo)
-		emit_signal("tile_set")
-		isCurrentMeepleChoose = true
-		Player.update_current_state(Player.STATE.CHOOSE_MIPLE)
+func _on_empty_tile_click(row: int, col: int, index: int):
+	if Player.get_current_state() == Player.STATE.CHOOSE_TILE:
+		print("Clicked on empty tile on Row: %s, Col: %s, Index: %s" % [row, col, index])
+		var empty_tile = grid_container.get_child(index)
+		var new_tile = get_tile_by_name(current_tile_name).instantiate()
+		tile_set.connect(new_tile._on_tile_set)
+		meeple_skip.connect(new_tile._on_tile_meeple_skip)
+		new_tile.connect("meeple_set", _on_meeple_set)
+		new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
+		#new_tile.connect("area_compare", _on_tile_compare.bind(index, row, col))
+		new_tile.angle = current_angle
+		new_tile.side = current_angle_side
+		new_tile.is_set = true
+		#new_tile.is_current = true
+		
+		grid_container.remove_child(empty_tile)
+		empty_tile.queue_free()
 
-func _on_empty_tile_hovered(row: int, col: int, empty_tile_instance: EmptyMapTile):
-	emit_signal("tile_hovered", row, col, currentTileInfo)
+		grid_container.add_child(new_tile)
+		grid_container.move_child(new_tile, index)
+		
+		find_tile_compare(row, col, index)
+		#emit_signal("tile_set")
+		skip_meeple_set()
 
-func _on_empty_tile_exited(row: int, col: int, empty_tile_instance: EmptyMapTile):
-	emit_signal("tile_exited", row, col)
+func _on_empty_tile_hovered(index: int):
+	emit_signal("tile_hovered", index)
 
-func set_tile_map(row: int, col: int, tile_info):
+func _on_empty_tile_exited(index: int):
+	emit_signal("tile_exited", index)
+
+#func set_tile_map(row: int, col: int, tile_info):
+	#var index = row * grid_container.columns + col
+	#var new_tile = GameTileScene.instantiate()
+	#var empty_tile = grid_container.get_child(index)
+	#tile_set.connect(new_tile._on_tile_set)
+	#meeple_skip.connect(new_tile._on_meeple_skip)
+	#new_tile.connect("meeple_set", _on_meeple_set)
+	#new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
+	#new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
+	#new_tile.angel = currentTileRotate
+	#
+	#grid_container.remove_child(empty_tile)
+	#empty_tile.queue_free()
+#
+	#grid_container.add_child(new_tile)
+	#grid_container.move_child(new_tile, index)
+	#
+	#find_tile_compare(row, col, index)
+	#
+	#currentTileRotate = 0.0
+
+func set_first_map_tile(row: int, col: int, tile_info, current_tile_name):
 	var index = row * grid_container.columns + col
-	var new_tile = GameTileScene.instantiate()
 	var empty_tile = grid_container.get_child(index)
-	tile_set.connect(new_tile._on_tile_set)
-	meeple_skip.connect(new_tile._on_meeple_skip)
-	new_tile.connect("meeple_set", _on_meeple_set)
-	new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
-	new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
-	new_tile.angel = currentTileRotate
-	
-	grid_container.remove_child(empty_tile)
-	empty_tile.queue_free()
-
-	grid_container.add_child(new_tile)
-	grid_container.move_child(new_tile, index)
-	
-	find_tile_compare(row, col, index)
-	
-	currentTileRotate = 0.0
-
-func set_first_map_tile(row: int, col: int, tile_info):
-	var index = row * grid_container.columns + col
-	var new_tile = GameTileScene.instantiate()
-	var empty_tile = grid_container.get_child(index)
+	current_tile_name = current_tile_name
+	var new_tile = get_tile_by_name(current_tile_name).instantiate()
 	tile_set.connect(new_tile._on_tile_set)
 	new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
-	meeple_skip.connect(new_tile._on_meeple_skip)
-	new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
-	new_tile.angel = currentTileRotate
+	meeple_skip.connect(new_tile._on_tile_meeple_skip)
+	#tile_set.connect(new_tile._on_tile_set)
+	#meeple_skip.connect(new_tile._on_tile_meeple_skip)
+	#new_tile.connect("area_compare", _on_tile_compare.bind(index, row, col))
+	new_tile.angle = currentTileRotate
+	new_tile.side = current_angle_side
 	new_tile.is_set = true
 	
 	grid_container.remove_child(empty_tile)
@@ -139,10 +173,34 @@ func set_first_map_tile(row: int, col: int, tile_info):
 	grid_container.add_child(new_tile)
 	grid_container.move_child(new_tile, index)
 	
-	tileIndex.append(index)
-	
 	find_tile_compare(row, col, index)
 	skip_meeple_set()
+	#var index = row * grid_container.columns + col
+	#var new_tile = GameTileScene.instantiate()
+	#var empty_tile = grid_container.get_child(index)
+	#tile_set.connect(new_tile._on_tile_set)
+	#new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
+	#meeple_skip.connect(new_tile._on_meeple_skip)
+	#new_tile.tile_info = resource_tiles.tile_info_x5[tile_info]
+	#new_tile.angel = currentTileRotate
+	#new_tile.is_set = true
+	#
+	#grid_container.remove_child(empty_tile)
+	#empty_tile.queue_free()
+#
+	#grid_container.add_child(new_tile)
+	#grid_container.move_child(new_tile, index)
+	#
+	#tileIndex.append(index)
+	
+	#find_tile_compare(row, col, index)
+	#skip_meeple_set()
+func set_current_tile_name(na):
+	current_tile_name = na
+
+func get_current_tile_name():
+	var tile = get_tile_by_name(current_tile_name)
+	return tile
 
 func _on_tile_ready(row, col, node):
 	fill_block_in_matrix(row, col, node.get_top_level_matrix())
@@ -193,8 +251,12 @@ func skip_meeple_set() -> void:
 	emit_signal("meeple_skip")
 	isCurrentMeepleChoose = false
 
-func _on_map_2_test_new_tile(info) -> void:
+func get_tile_by_name(scene_name: String):
+	return tile_map.get(scene_name, null)
+
+func _on_map_2_test_new_tile(info, current_tile_name) -> void:
 	currentTileInfo = info
+	current_tile_name = current_tile_name
 	get_avalable_set_tile()
 
 func _on_map_hover_tiles_is_tile_rotate(angle) -> void:
@@ -493,14 +555,14 @@ func get_available_corners(row: int, col: int, current_index: int):
 func get_avalable_set_tile():
 	var info_matrix
 	
-	if currentTileRotate == 0:
+	if current_angle_side == "top":
 		info_matrix = resource_tiles.tile_info_x5[currentTileInfo]["top_level"]
-	if currentTileRotate == -90:
+	if current_angle_side == "left":
 		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
-	if currentTileRotate == -180:
+	if current_angle_side == "bottom":
 		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
 		info_matrix = rotate_counterclockwise(info_matrix)
-	if currentTileRotate == -270:
+	if current_angle_side == "right":
 		info_matrix = rotate_counterclockwise(resource_tiles.tile_info_x5[currentTileInfo]["top_level"])
 		info_matrix = rotate_counterclockwise(info_matrix)
 		info_matrix = rotate_counterclockwise(info_matrix)
@@ -842,3 +904,8 @@ func get_fraction_float(num: float):
 		return floor(num)
 	else:
 		return ceil(num)
+
+func _on_map_hover_tiles_update_tile_rotation(angle: float, side) -> void:
+	current_angle = angle
+	current_angle_side = side
+	get_avalable_set_tile()

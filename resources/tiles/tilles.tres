@@ -64,6 +64,11 @@ var test_stack_x5_roads = {
 	\"brick_16\": 20,
 }
 
+var test_deck = {
+	\"brick_1\": 5,
+	\"brick_2\": 5,
+}
+
 var tile_info = {
 	\"brick_1\": {
 		\"top_level\": [
@@ -1146,6 +1151,7 @@ var tile_info_x5 = {
 			[5, 1, 1, 1, 5]
 		],
 		\"name\": \"brick_1\",
+		\"name_tile\": \"tile_1\",
 		\"tile_src\": load(\"res://tiles/space/TIL1.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1204,6 +1210,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 5, 5],
 		],
 		\"name\": \"brick_2\",
+		\"name_tile\": \"tile_2\",
 		\"tile_src\": load(\"res://tiles/space/TIL2.png\"),
 		\"down_level\": {
 			\"1\": [

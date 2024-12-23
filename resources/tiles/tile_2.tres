@@ -3,6 +3,14 @@
 [sub_resource type="GDScript" id="GDScript_8oego"]
 script/source = "extends Resource
 
+var top_level = [
+	[5, 5, 0, 5, 5],
+	[1, 5, 0, 5, 1],
+	[1, 5, 0, 5, 1],
+	[1, 5, 0, 5, 1],
+	[5, 5, 0, 5, 5],
+]
+
 var meeple_position = {
 	\"top\": {
 		\"position_1\": Vector2(0, 1),
