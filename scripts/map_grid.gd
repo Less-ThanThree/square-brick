@@ -79,8 +79,8 @@ func _ready() -> void:
 			_create_empty_tile(row, col)
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("skip") && isCurrentMeepleChoose:
-		skip_meeple_set()
+	if Input.is_action_just_pressed("skip") && Player.get_current_state() == Player.STATE.CHOOSE_MIPLE:
+		emit_signal("meeple_skip")
 
 func _create_empty_tile(row: int, col: int):
 	var empty_tile_instance = EmptyTileScene.instantiate()
@@ -106,13 +106,14 @@ func _on_empty_tile_click(row: int, col: int, index: int):
 		var empty_tile = grid_container.get_child(index)
 		var new_tile = get_tile_by_name(current_tile_name).instantiate()
 		tile_set.connect(new_tile._on_tile_set)
+		#meeple_set.
 		meeple_skip.connect(new_tile._on_tile_meeple_skip)
-		new_tile.connect("meeple_set", _on_meeple_set)
+		#new_tile.connect("tile_set", _on_tile_set)
 		new_tile.connect("ready", _on_tile_ready.bind(row, col, new_tile))
 		#new_tile.connect("area_compare", _on_tile_compare.bind(index, row, col))
 		new_tile.angle = current_angle
 		new_tile.side = current_angle_side
-		new_tile.is_set = true
+		#new_tile.is_set = true
 		#new_tile.is_current = true
 		
 		grid_container.remove_child(empty_tile)
@@ -122,8 +123,8 @@ func _on_empty_tile_click(row: int, col: int, index: int):
 		grid_container.move_child(new_tile, index)
 		
 		find_tile_compare(row, col, index)
-		#emit_signal("tile_set")
-		skip_meeple_set()
+		emit_signal("tile_set")
+		#skip_meeple_set()
 
 func _on_empty_tile_hovered(index: int):
 	emit_signal("tile_hovered", index)
@@ -222,10 +223,7 @@ func _on_tile_ready(row, col, node):
 	if mapFindZonesSize["Build"] != finds_zone_build.size():
 		for build in finds_zone_build:
 			for index_build in build["Index"]:
-				print(grid_container.get_child(index_build))
 				change_complete_zone(index_build)
-			#print(build["Index"])
-			#change_complete_zone(build)
 		Player.increase_score(20)
 		mapFindZonesSize["Build"] = finds_zone_build.size()
 	
@@ -235,10 +233,6 @@ func _on_tile_ready(row, col, node):
 				change_complete_zone(index_road)
 		Player.increase_score(10)
 		mapFindZonesSize["Road"] = finds_zone_road.size()
-	
-	#if finds_zone.size() > 0:
-		#for zone in finds_zone:
-			#remove_index_by_key_value(mapZone, "Index", zone["Index"])
 	
 	print("----")
 	print("ZONE MAP")

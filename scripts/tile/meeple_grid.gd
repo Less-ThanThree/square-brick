@@ -36,7 +36,11 @@ func clear_meeple_advice(node):
 	for meeple in meeples:
 		if meeple != node:
 			meeple.clear_advice()
+	if node != null:
+		parent.is_meeple = true
+		Player.decrease_meeple(1)
 	Player.update_current_state(Player.STATE.CHOOSE_TILE)
 
 func _on_meeple_skip():
-	clear_meeple_advice(null)
+	if !parent.is_meeple:
+		clear_meeple_advice(null)

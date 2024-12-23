@@ -160,12 +160,14 @@ func set_debug_settings():
 func set_matrix_rotate():
 	match side:
 		"right":
-			rotate_clockwise()
+			rotate_counterclockwise()
+			rotate_counterclockwise()
+			rotate_counterclockwise()
 		"left":
 			rotate_counterclockwise()
 		"bottom":
-			rotate_clockwise()
-			rotate_clockwise()
+			rotate_counterclockwise()
+			rotate_counterclockwise()
 
 func _on_area_entered(zone: String):
 	#var side = get_side_on_local_angle()
