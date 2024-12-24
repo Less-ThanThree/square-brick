@@ -54,6 +54,7 @@ func _ready() -> void:
 	matrix_top_level = tile_resource.top_level
 	set_matrix_rotate()
 	base.rotation_degrees = angle
+	#emit_signal("show_meeple_advice")
 
 func _input(event: InputEvent) -> void:
 	if Player.get_current_state() == Player.STATE.CHOOSE_TILE:

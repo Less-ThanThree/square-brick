@@ -9,6 +9,23 @@ extends GridContainer
 
 var tile_1 = preload("res://components/tile_test/tile_1_test.tscn")
 var tile_2 = preload("res://components/tile_test/tile_2_test.tscn")
+var tile_3 = preload("res://components/tile_test/tile_3.tscn")
+var tile_4 = preload("res://components/tile_test/tile_4.tscn")
+var tile_5 = preload("res://components/tile_test/tile_5.tscn")
+var tile_6 = preload("res://components/tile_test/tile_6.tscn")
+var tile_7 = preload("res://components/tile_test/tile_7.tscn")
+var tile_8 = preload("res://components/tile_test/tile_8.tscn")
+var tile_9 = preload("res://components/tile_test/tile_9.tscn")
+var tile_10 = preload("res://components/tile_test/tile_10.tscn")
+var tile_11 = preload("res://components/tile_test/tile_11.tscn")
+var tile_12 = preload("res://components/tile_test/tile_12.tscn")
+var tile_13 = preload("res://components/tile_test/tile_13.tscn")
+var tile_14 = preload("res://components/tile_test/tile_14.tscn")
+var tile_15 = preload("res://components/tile_test/tile_15.tscn")
+var tile_16 = preload("res://components/tile_test/tile_16.tscn")
+var tile_17 = preload("res://components/tile_test/tile_17.tscn")
+var tile_18 = preload("res://components/tile_test/tile_18.tscn")
+var tile_19 = preload("res://components/tile_test/tile_19.tscn")
 
 signal tile_set
 signal tile_hovered
@@ -23,6 +40,23 @@ const BLOCK_SIZE = 5
 var tile_map = {
 	"tile_1": tile_1,
 	"tile_2": tile_2,
+	"tile_3": tile_3,
+	"tile_4": tile_4,
+	"tile_5": tile_5,
+	"tile_6": tile_6,
+	"tile_7": tile_7,
+	"tile_8": tile_8,
+	"tile_9": tile_9,
+	"tile_10": tile_10,
+	"tile_11": tile_11,
+	"tile_12": tile_12,
+	"tile_13": tile_13,
+	"tile_14": tile_14,
+	"tile_15": tile_15,
+	"tile_16": tile_16,
+	"tile_17": tile_17,
+	"tile_18": tile_18,
+	"tile_19": tile_19,
 }
 
 var mapTiles = []
@@ -62,7 +96,7 @@ var directions = [
 
 var current_tile_name
 var current_angle_side = "top"
-var current_angle
+var current_angle = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

@@ -26,8 +26,8 @@ func _process(delta: float) -> void:
 	pass
 
 func get_base_tile_array(resource) -> Array:
-	#var deck_base = resource.base_array_load
-	var deck_base = resource.test_deck
+	var deck_base = resource.base_array_load
+	#var deck_base = resource.test_deck
 	var tile_base_array = []
 	for brick in deck_base:
 		for i in range(deck_base[brick]):

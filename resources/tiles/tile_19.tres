@@ -1,0 +1,51 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://ccnsvmh8spimh"]
+
+[sub_resource type="GDScript" id="GDScript_gn54t"]
+script/source = "extends Resource
+
+var top_level = [
+	[0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0],
+	[2, 2, 3, 2, 2],
+	[0, 0, 2, 0, 0],
+	[0, 0, 2, 0, 0],
+]
+
+var meeple_position = {
+	\"top\": {
+		\"position_1\": Vector2(1, 0), # road_left
+		\"position_2\": Vector2(1, 2), # road_right
+		\"position_3\": Vector2(2, 1), # road_bottom
+		\"position_4\": Vector2(0, 1), # field_top
+		\"position_5\": Vector2(2, 0), # field_bottom_left
+		\"position_6\": Vector2(2, 2), # field_bottom_right
+	},
+	\"left\": {
+		\"position_1\": Vector2(0, 1), # road_left
+		\"position_2\": Vector2(2, 1), # road_right
+		\"position_3\": Vector2(1, 2), # road_bottom
+		\"position_4\": Vector2(1, 0), # field_top
+		\"position_5\": Vector2(0, 2), # field_bottom_left
+		\"position_6\": Vector2(2, 2), # field_bottom_right
+	},
+	\"bottom\": {
+		\"position_1\": Vector2(1, 0), # road_left
+		\"position_2\": Vector2(1, 2), # road_right
+		\"position_3\": Vector2(0, 1), # road_bottom
+		\"position_4\": Vector2(2, 1), # field_top
+		\"position_5\": Vector2(0, 0), # field_bottom_left
+		\"position_6\": Vector2(0, 2), # field_bottom_right
+	},
+	\"right\": {
+		\"position_1\": Vector2(0, 1), # road_left
+		\"position_2\": Vector2(2, 1), # road_right
+		\"position_3\": Vector2(1, 0), # road_bottom
+		\"position_4\": Vector2(1, 2), # field_top
+		\"position_5\": Vector2(0, 0), # field_bottom_left
+		\"position_6\": Vector2(2, 0), # field_bottom_right
+	}
+}
+"
+
+[resource]
+script = SubResource("GDScript_gn54t")

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://btitfxagxa2qp"]
+
+[sub_resource type="GDScript" id="GDScript_dfdqp"]
+script/source = "extends Resource
+
+var top_level = [
+	[5, 1, 1, 1, 5],
+	[1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1],
+	[5, 1, 1, 1, 5],
+]
+
+var meeple_position = {
+	\"top\": {
+		\"position_1\": Vector2(1, 1), # build
+	},
+	\"left\": {
+		\"position_1\": Vector2(1, 1), # build
+	},
+	\"bottom\": {
+		\"position_1\": Vector2(1, 1), # build
+	},
+	\"right\": {
+		\"position_1\": Vector2(1, 1), # build
+	}
+}
+"
+
+[resource]
+script = SubResource("GDScript_dfdqp")

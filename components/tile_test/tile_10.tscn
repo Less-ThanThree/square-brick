@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dhhhf53u0o1d8"]
 
 [ext_resource type="Script" path="res://scripts/tile/tile_object.gd" id="1_cujql"]
-[ext_resource type="Resource" uid="uid://dhsitupxiajuw" path="res://resources/tiles/tile_1.tres" id="2_ou3jq"]
+[ext_resource type="Resource" uid="uid://b28he7f6p1jlf" path="res://resources/tiles/tile_10.tres" id="2_n6pxc"]
 [ext_resource type="Texture2D" uid="uid://d2q43lhx81lkn" path="res://tiles/space/TIL10.png" id="3_sylsn"]
 [ext_resource type="PackedScene" uid="uid://wojgi76c8of4" path="res://components/tile_component/debug_center.tscn" id="4_tii12"]
 [ext_resource type="Script" path="res://scripts/tile/meeple_grid.gd" id="5_7vra4"]
@@ -20,7 +20,7 @@ pivot_offset = Vector2(128, 128)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_cujql")
-tile_resource = ExtResource("2_ou3jq")
+tile_resource = ExtResource("2_n6pxc")
 
 [node name="Base" type="Control" parent="."]
 layout_mode = 1

@@ -1274,6 +1274,7 @@ var tile_info_x5 = {
 			[0, 0, 0],
 		],
 		\"name\": \"brick_3\",
+		\"name_tile\": \"tile_3\",
 		\"tile_src\": load(\"res://tiles/space/TIL3.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1332,6 +1333,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 5, 5],
 		],
 		\"name\": \"brick_4\",
+		\"name_tile\": \"tile_4\",
 		\"tile_src\": load(\"res://tiles/space/TIL4.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1390,6 +1392,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_5\",
+		\"name_tile\": \"tile_5\",
 		\"tile_src\": load(\"res://tiles/space/TIL5.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1448,6 +1451,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 5, 5]
 		],
 		\"name\": \"brick_6\",
+		\"name_tile\": \"tile_6\",
 		\"tile_src\": load(\"res://tiles/space/TIL6.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1506,6 +1510,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 5, 5],
 		],
 		\"name\": \"brick_7\",
+		\"name_tile\": \"tile_7\",
 		\"tile_src\": load(\"res://tiles/space/TIL7.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1564,6 +1569,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_8\",
+		\"name_tile\": \"tile_8\",
 		\"tile_src\": load(\"res://tiles/space/TIL8.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1622,6 +1628,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_9\",
+		\"name_tile\": \"tile_9\",
 		\"tile_src\": load(\"res://tiles/space/TIL9.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1680,6 +1687,7 @@ var tile_info_x5 = {
 			[5, 0, 2, 0, 5]
 		],
 		\"name\": \"brick_10\",
+		\"name_tile\": \"tile_10\",
 		\"tile_src\": load(\"res://tiles/space/TIL10.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1731,9 +1739,6 @@ var tile_info_x5 = {
 	},
 	\"brick_11\": {
 		\"top_level\": [
-			#[1, 1, 1],
-			#[1, 1, 1],
-			#[1, 1, 1],
 			[5, 1, 1, 1, 5],
 			[1, 1, 1, 1, 1],
 			[1, 1, 1, 1, 1],
@@ -1741,6 +1746,7 @@ var tile_info_x5 = {
 			[5, 1, 1, 1, 5],
 		],
 		\"name\": \"brick_11\",
+		\"name_tile\": \"tile_11\",
 		\"tile_src\": load(\"res://tiles/space/TIL11.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1799,6 +1805,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_12\",
+		\"name_tile\": \"tile_12\",
 		\"tile_src\": load(\"res://tiles/space/TIL12.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1857,6 +1864,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_13\",
+		\"name_tile\": \"tile_13\",
 		\"tile_src\": load(\"res://tiles/space/TIL13.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1908,9 +1916,6 @@ var tile_info_x5 = {
 	},
 	\"brick_14\": {
 		\"top_level\": [
-			#[1, 1, 5],
-			#[1, 2, 2],
-			#[5, 2, 0],
 			[1, 1, 1, 1, 5],
 			[1, 5, 5, 5, 5],
 			[1, 5, 2, 2, 2],
@@ -1918,6 +1923,7 @@ var tile_info_x5 = {
 			[5, 5, 2, 0, 0],
 		],
 		\"name\": \"brick_14\",
+		\"name_tile\": \"tile_14\",
 		\"tile_src\": load(\"res://tiles/space/TIL14.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -1976,6 +1982,7 @@ var tile_info_x5 = {
 			[5, 5, 0, 0, 0],
 		],
 		\"name\": \"brick_15\",
+		\"name_tile\": \"tile_15\",
 		\"tile_src\": load(\"res://tiles/space/TIL15.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -2034,6 +2041,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_16\",
+		\"name_tile\": \"tile_16\",
 		\"tile_src\": load(\"res://tiles/space/TIL16.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -2092,6 +2100,7 @@ var tile_info_x5 = {
 			[0, 0, 0, 0, 0],
 		],
 		\"name\": \"brick_17\",
+		\"name_tile\": \"tile_17\",
 		\"tile_src\": load(\"res://tiles/space/TIL17.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -2150,6 +2159,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_18\",
+		\"name_tile\": \"tile_18\",
 		\"tile_src\": load(\"res://tiles/space/TIL18.png\"),
 		\"down_level\": {
 			\"1\": [
@@ -2208,6 +2218,7 @@ var tile_info_x5 = {
 			[0, 0, 2, 0, 0],
 		],
 		\"name\": \"brick_19\",
+		\"name_tile\": \"tile_19\",
 		\"tile_src\": load(\"res://tiles/space/TIL19.png\"),
 		\"down_level\": {
 			\"1\": [

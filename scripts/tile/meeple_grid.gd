@@ -24,7 +24,7 @@ func _on_show_meeple_advice():
 	if !parent.is_set:
 		var meeple_advice_pos = tile_resource.meeple_position[parent.side]
 		for pos in meeple_advice_pos:
-			var index = meeple_advice_pos[pos].y * self.columns + meeple_advice_pos[pos].x
+			var index = meeple_advice_pos[pos].x * self.columns + meeple_advice_pos[pos].y
 			var meeple_panel = get_child(index)
 			meeple_panel.connect("meeple_set", clear_meeple_advice)
 			meeple_panel._on_meeple_set()

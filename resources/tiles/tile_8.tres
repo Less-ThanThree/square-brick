@@ -14,35 +14,35 @@ var top_level = [
 var meeple_position = {
 	\"top\": {
 		\"position_1\": Vector2(0, 1), # build
-		\"position_2\": Vector2(1, 1), # road_left
-		\"position_3\": Vector2(2, 1), # road_right
-		\"position_4\": Vector2(0, 0), # road_bottom
-		\"position_5\": Vector2(0, 0), # field_left
-		\"position_6\": Vector2(0, 0), # field_right
+		\"position_2\": Vector2(1, 0), # road_left
+		\"position_3\": Vector2(1, 2), # road_right
+		\"position_4\": Vector2(2, 1), # road_bottom
+		\"position_5\": Vector2(2, 0), # field_left
+		\"position_6\": Vector2(2, 2), # field_right
 	},
 	\"left\": {
-		\"position_1\": Vector2(0, 1), # build
-		\"position_2\": Vector2(1, 1), # road_left
-		\"position_3\": Vector2(2, 1), # road_right
-		\"position_4\": Vector2(0, 0), # road_bottom
-		\"position_5\": Vector2(0, 0), # field_left
-		\"position_6\": Vector2(0, 0), # field_right
+		\"position_1\": Vector2(1, 0), # build
+		\"position_2\": Vector2(2, 1), # road_left
+		\"position_3\": Vector2(0, 1), # road_right
+		\"position_4\": Vector2(1, 2), # road_bottom
+		\"position_5\": Vector2(0, 2), # field_left
+		\"position_6\": Vector2(2, 2), # field_right
 	},
 	\"bottom\": {
-		\"position_1\": Vector2(0, 1), # build
-		\"position_2\": Vector2(1, 1), # road_left
-		\"position_3\": Vector2(2, 1), # road_right
-		\"position_4\": Vector2(0, 0), # road_bottom
+		\"position_1\": Vector2(2, 1), # build
+		\"position_2\": Vector2(1, 0), # road_left
+		\"position_3\": Vector2(1, 2), # road_right
+		\"position_4\": Vector2(0, 1), # road_bottom
 		\"position_5\": Vector2(0, 0), # field_left
-		\"position_6\": Vector2(0, 0), # field_right
+		\"position_6\": Vector2(0, 2), # field_right
 	},
 	\"right\": {
-		\"position_1\": Vector2(0, 1), # build
-		\"position_2\": Vector2(1, 1), # road_left
-		\"position_3\": Vector2(2, 1), # road_right
-		\"position_4\": Vector2(0, 0), # road_bottom
+		\"position_1\": Vector2(1, 2), # build
+		\"position_2\": Vector2(2, 1), # road_left
+		\"position_3\": Vector2(0, 1), # road_right
+		\"position_4\": Vector2(1, 0), # road_bottom
 		\"position_5\": Vector2(0, 0), # field_left
-		\"position_6\": Vector2(0, 0), # field_right
+		\"position_6\": Vector2(2, 0), # field_right
 	}
 }
 "

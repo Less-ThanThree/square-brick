@@ -13,23 +13,22 @@ var top_level = [
 
 var meeple_position = {
 	\"top\": {
-		\"position_1\": Vector2(1, 1),
-		\"position_2\": Vector2(2, 1),
+		\"position_1\": Vector2(1, 1), # build
+		\"position_2\": Vector2(2, 1), # field
 	},
 	\"left\": {
 		\"position_1\": Vector2(1, 1),
-		\"position_2\": Vector2(0, 1),
+		\"position_2\": Vector2(1, 2),
 	},
 	\"bottom\": {
 		\"position_1\": Vector2(1, 1),
-		\"position_2\": Vector2(1, 0),
+		\"position_2\": Vector2(0, 1),
 	},
 	\"right\": {
 		\"position_1\": Vector2(1, 1),
-		\"position_2\": Vector2(1, 2),
+		\"position_2\": Vector2(1, 0),
 	}
 }
-
 "
 
 [resource]
