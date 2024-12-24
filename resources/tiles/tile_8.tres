@@ -1,0 +1,51 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bot7qaifn6u16"]
+
+[sub_resource type="GDScript" id="GDScript_r4rmy"]
+script/source = "extends Resource
+
+var top_level = [
+	[5, 1, 1, 1, 5],
+	[5, 5, 5, 5, 5],
+	[2, 2, 3, 2, 2],
+	[0, 0, 2, 0, 0],
+	[0, 0, 2, 0, 0],
+]
+
+var meeple_position = {
+	\"top\": {
+		\"position_1\": Vector2(0, 1), # build
+		\"position_2\": Vector2(1, 1), # road_left
+		\"position_3\": Vector2(2, 1), # road_right
+		\"position_4\": Vector2(0, 0), # road_bottom
+		\"position_5\": Vector2(0, 0), # field_left
+		\"position_6\": Vector2(0, 0), # field_right
+	},
+	\"left\": {
+		\"position_1\": Vector2(0, 1), # build
+		\"position_2\": Vector2(1, 1), # road_left
+		\"position_3\": Vector2(2, 1), # road_right
+		\"position_4\": Vector2(0, 0), # road_bottom
+		\"position_5\": Vector2(0, 0), # field_left
+		\"position_6\": Vector2(0, 0), # field_right
+	},
+	\"bottom\": {
+		\"position_1\": Vector2(0, 1), # build
+		\"position_2\": Vector2(1, 1), # road_left
+		\"position_3\": Vector2(2, 1), # road_right
+		\"position_4\": Vector2(0, 0), # road_bottom
+		\"position_5\": Vector2(0, 0), # field_left
+		\"position_6\": Vector2(0, 0), # field_right
+	},
+	\"right\": {
+		\"position_1\": Vector2(0, 1), # build
+		\"position_2\": Vector2(1, 1), # road_left
+		\"position_3\": Vector2(2, 1), # road_right
+		\"position_4\": Vector2(0, 0), # road_bottom
+		\"position_5\": Vector2(0, 0), # field_left
+		\"position_6\": Vector2(0, 0), # field_right
+	}
+}
+"
+
+[resource]
+script = SubResource("GDScript_r4rmy")
